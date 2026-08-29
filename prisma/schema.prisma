@@ -1,0 +1,344 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  passwordHash String
+  role         String      @default("STUDENT") // ADMIN, FACULTY, STUDENT
+  name         String
+  rollNo       String?     // for Student
+  employeeId   String?     // for Faculty
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  batchId      String?
+  batch        Batch?      @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  facultyAllocations  SubjectFacultyBatch[]
+  practicalSessions   PracticalSession[]    @relation("FacultySessions")
+  sessionEntries      SessionEntry[]
+  attempts            Attempt[]
+  submissions         Submission[]
+  assignmentsCreated  Assignment[]          @relation("FacultyAssignments")
+  assignmentSubmits   AssignmentSubmission[]
+  resourcesUploaded   Resource[]
+  timetableSlots      TimetableSlot[]       @relation("FacultyTimetable")
+  notifications       Notification[]
+  auditLogs           AuditLog[]
+}
+
+model AcademicSession {
+  id         String      @id @default(uuid())
+  yearRange  String      @unique // e.g. "2026-2027"
+  isCurrent  Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+
+  studyYears     StudyYear[]
+  timetableSlots TimetableSlot[]
+}
+
+model Department {
+  id         String      @id @default(uuid())
+  code       String      @unique // e.g. "CSE-DS"
+  name       String
+  createdAt  DateTime    @default(now())
+
+  users          User[]
+  studyYears     StudyYear[]
+  subjects       Subject[]
+  timetableSlots TimetableSlot[]
+}
+
+model StudyYear {
+  id                String          @id @default(uuid())
+  name              String          // e.g. "FY", "SY", "TY", "Final Year"
+  academicSessionId String
+  academicSession   AcademicSession @relation(fields: [academicSessionId], references: [id], onDelete: Cascade)
+  departmentId      String
+  department        Department      @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  createdAt         DateTime        @default(now())
+
+  divisions      Division[]
+  subjects       Subject[]
+  timetableSlots TimetableSlot[]
+}
+
+model Division {
+  id          String    @id @default(uuid())
+  name        String    // e.g. "Division A", "Division D"
+  studyYearId String
+  studyYear   StudyYear @relation(fields: [studyYearId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  batches        Batch[]
+  timetableSlots TimetableSlot[]
+}
+
+model Batch {
+  id         String   @id @default(uuid())
+  name       String   // e.g. "Batch 1", "Batch 2"
+  divisionId String
+  division   Division @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  students           User[]
+  facultyAllocations SubjectFacultyBatch[]
+  practicalSessions  PracticalSession[]
+  assignments        Assignment[]
+  timetableSlots     TimetableSlot[]
+}
+
+model Subject {
+  id           String     @id @default(uuid())
+  code         String     // e.g. "ML101"
+  name         String     // e.g. "Machine Learning"
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  studyYearId  String
+  studyYear    StudyYear  @relation(fields: [studyYearId], references: [id], onDelete: Cascade)
+  rubricId     String?
+  rubric       Rubric?    @relation(fields: [rubricId], references: [id], onDelete: SetNull)
+  createdAt    DateTime   @default(now())
+
+  facultyAllocations SubjectFacultyBatch[]
+  experiments        Experiment[]
+  practicalSessions  PracticalSession[]
+  assignments        Assignment[]
+  resources          Resource[]
+  timetableSlots     TimetableSlot[]
+}
+
+model SubjectFacultyBatch {
+  id        String   @id @default(uuid())
+  subjectId String
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  batchId   String
+  batch     Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  facultyId String
+  faculty   User     @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([subjectId, batchId, facultyId])
+}
+
+model Rubric {
+  id           String    @id @default(uuid())
+  title        String    // e.g. "Standard Practical Rubric"
+  maxMarks     Float     @default(10.0)
+  criteriaJson String    // JSON string e.g. [{"category":"Program","marks":5},{"category":"Output","marks":3},{"category":"Viva","marks":2}]
+  createdAt    DateTime  @default(now())
+
+  subjects Subject[]
+}
+
+model Experiment {
+  id           String   @id @default(uuid())
+  subjectId    String
+  subject      Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  experimentNo Int
+  title        String
+  description  String
+  labManualUrl String?
+  createdAt    DateTime @default(now())
+
+  questions         PracticalQuestion[]
+  practicalSessions PracticalSession[]
+}
+
+model PracticalQuestion {
+  id                   String     @id @default(uuid())
+  experimentId         String
+  experiment           Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  title                String
+  description          String
+  difficulty           String     @default("MEDIUM") // EASY, MEDIUM, HARD
+  allowedLanguagesJson String     // JSON array e.g. ["c", "cpp", "java", "python", "r"]
+  defaultCodeJson      String?    // JSON object e.g. {"python": "def solve():\n    pass"}
+  marks                Float      @default(10.0)
+  createdAt            DateTime   @default(now())
+
+  testCases   TestCase[]
+  attempts    Attempt[]
+  submissions Submission[]
+}
+
+model TestCase {
+  id             String            @id @default(uuid())
+  questionId     String
+  question       PracticalQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  input          String
+  expectedOutput String
+  isHidden       Boolean           @default(false)
+}
+
+model PracticalSession {
+  id                     String     @id @default(uuid())
+  subjectId              String
+  subject                Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  experimentId           String
+  experiment             Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  batchId                String
+  batch                  Batch      @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  facultyId              String
+  faculty                User       @relation("FacultySessions", fields: [facultyId], references: [id], onDelete: Cascade)
+  startTime              DateTime
+  endTime                DateTime
+  status                 String     @default("SCHEDULED") // SCHEDULED, ACTIVE, COMPLETED
+  isLeaderboardPublished Boolean    @default(false)
+  createdAt              DateTime   @default(now())
+
+  sessionEntries SessionEntry[]
+  attempts       Attempt[]
+  submissions    Submission[]
+}
+
+model SessionEntry {
+  id         String           @id @default(uuid())
+  sessionId  String
+  session    PracticalSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  studentId  String
+  student    User             @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  joinedAt   DateTime         @default(now())
+}
+
+model Attempt {
+  id              String            @id @default(uuid())
+  sessionId       String
+  session         PracticalSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  studentId       String
+  student         User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  questionId      String
+  question        PracticalQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  attemptNumber   Int
+  code            String
+  language        String
+  status          String            // PASSED, FAILED, COMPILATION_ERROR, RUNTIME_ERROR
+  executionTime   Float?            // in ms
+  memoryUsed      Float?            // in KB/MB
+  testResultsJson String            // JSON array of test case outcomes
+  aiSuggestions   String?           // Automated instant improvement feedback
+  score           Float             @default(0.0)
+  createdAt       DateTime          @default(now())
+
+  submissions Submission[]
+}
+
+model Submission {
+  id               String            @id @default(uuid())
+  sessionId        String
+  session          PracticalSession  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  studentId        String
+  student          User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  questionId       String
+  question         PracticalQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  finalAttemptId   String?
+  finalAttempt     Attempt?          @relation(fields: [finalAttemptId], references: [id], onDelete: SetNull)
+  totalScore       Float             @default(0.0)
+  rubricScoresJson String?           // JSON object e.g. {"Program": 5, "Output": 3, "Viva": 2}
+  plagiarismScore  Float?            // 0 - 100 percentage
+  status           String            @default("SUBMITTED") // SUBMITTED, EVALUATED, PUBLISHED
+  submittedAt      DateTime          @default(now())
+}
+
+model Assignment {
+  id                   String   @id @default(uuid())
+  subjectId            String
+  subject              Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  batchId              String
+  batch                Batch    @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  facultyId            String
+  faculty              User     @relation("FacultyAssignments", fields: [facultyId], references: [id], onDelete: Cascade)
+  title                String
+  description          String
+  deadline             DateTime
+  maxMarks             Float    @default(10.0)
+  latePenaltyPerDay    Float    @default(1.0)
+  allowedFileTypesJson String   // e.g. ["pdf", "png", "zip"]
+  createdAt            DateTime @default(now())
+
+  submissions AssignmentSubmission[]
+}
+
+model AssignmentSubmission {
+  id             String     @id @default(uuid())
+  assignmentId   String
+  assignment     Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  studentId      String
+  student        User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  fileUrl        String?
+  fileName       String?
+  fileSize       Int?
+  textSolution   String?
+  submittedAt    DateTime   @default(now())
+  isLate         Boolean    @default(false)
+  penaltyApplied Float      @default(0.0)
+  score          Float?
+  feedback       String?
+  status         String     @default("SUBMITTED") // SUBMITTED, EVALUATED, PUBLISHED
+}
+
+model Resource {
+  id           String   @id @default(uuid())
+  subjectId    String
+  subject      Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  facultyId    String
+  faculty      User     @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  fileUrl      String
+  resourceType String   @default("NOTES") // NOTES, LAB_MANUAL, REFERENCE, OTHER
+  uploadedAt   DateTime @default(now())
+}
+
+model TimetableSlot {
+  id                String          @id @default(uuid())
+  academicSessionId String
+  academicSession   AcademicSession @relation(fields: [academicSessionId], references: [id], onDelete: Cascade)
+  departmentId      String
+  department        Department      @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  studyYearId       String
+  studyYear         StudyYear       @relation(fields: [studyYearId], references: [id], onDelete: Cascade)
+  divisionId        String
+  division          Division        @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+  batchId           String
+  batch             Batch           @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  subjectId         String
+  subject           Subject         @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  facultyId         String
+  faculty           User            @relation("FacultyTimetable", fields: [facultyId], references: [id], onDelete: Cascade)
+  dayOfWeek         String          // MONDAY, TUESDAY, etc.
+  startTime         String          // e.g. "09:00"
+  endTime           String          // e.g. "11:00"
+  roomNo            String          // e.g. "Lab 301"
+  createdAt         DateTime        @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      String   @default("INFO") // INFO, DEADLINE, PRACTICAL, MARKS
+  read      Boolean  @default(false)
+  targetUrl String?
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    String   // LOGIN, SUBMIT_CODE, CREATE_QUESTION, PUBLISH_MARKS, PLAGIARISM_CHECK, STRUCTURE_CHANGE
+  details   String?  // JSON string
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
