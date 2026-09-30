@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
+import SidebarLayout from '@/components/SidebarLayout';
 import {
   BookOpen,
   Calendar,
@@ -23,7 +23,17 @@ import {
   StopCircle,
 } from 'lucide-react';
 
-export default function FacultyDashboard() {
+export default function FacultyDashboard() { 
+
+    
+  const facultyTabs = [
+    { id: 'overview', label: 'Overview', icon: Building2 },
+    { id: 'experiments', label: 'Course Experiments', icon: FileCode },
+    { id: 'sessions', label: 'Practical Lab Sessions', icon: Clock },
+    { id: 'assignments', label: 'Course Assignments', icon: FileText },
+    { id: 'plagiarism', label: 'Plagiarism Audit', icon: Search },
+  ];
+
   const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'sessions' | 'assignments' | 'plagiarism'>('overview');
 
@@ -271,8 +281,9 @@ export default function FacultyDashboard() {
   };
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-slate-950 text-slate-400 flex flex-col items-center justify-center gap-4 text-sm font-medium">
+
+  return (
+      <div className="min-h-screen bg-gray-50 text-gray-500 flex flex-col items-center justify-center gap-4 text-sm font-medium">
         <div className="flex items-center gap-3">
           <div className="w-5 h-5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
           <span>Loading Faculty Workspace...</span>
@@ -284,22 +295,25 @@ export default function FacultyDashboard() {
   const currentSubject = subjects.find((s) => s.id === selectedSubjectId) || subjects[0];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
-      <Navbar user={user} />
-
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full space-y-8">
+    <SidebarLayout 
+      user={user} 
+      tabs={facultyTabs}
+      activeTab={activeTab}
+      onTabChange={setActiveTab as any}
+    >
+      <div className="space-y-8">
         {/* Professional Faculty Header */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div className="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-xl">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-emerald-400 text-xs font-semibold uppercase tracking-wider">
                 <UserCheck className="w-3.5 h-3.5" /> Faculty Portal & Laboratory Management
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">
                 {user.name}
               </h1>
-              <p className="text-slate-400 text-xs sm:text-sm">
-                Employee ID: <span className="text-slate-200 font-mono font-semibold">{user.employeeId || 'FAC-101'}</span> | Department: <span className="text-slate-200 font-semibold">{user.department?.name || 'Computer Science & Engineering'}</span>
+              <p className="text-gray-500 text-xs sm:text-sm">
+                Employee ID: <span className="text-gray-800 font-mono font-semibold">{user.employeeId || 'FAC-101'}</span> | Department: <span className="text-gray-800 font-semibold">{user.department?.name || 'Computer Science & Engineering'}</span>
               </p>
             </div>
 
@@ -310,7 +324,7 @@ export default function FacultyDashboard() {
                   setExpNo(String(experiments.length + 1));
                   setShowExpModal(true);
                 }}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> Add Experiment
               </button>
@@ -325,78 +339,49 @@ export default function FacultyDashboard() {
                   setSessEnd(toLocalISO(end));
                   setShowSessionModal(true);
                 }}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-gray-900 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <Calendar className="w-4 h-4" /> Schedule Lab Session
               </button>
               <button
                 onClick={() => setShowAssignModal(true)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 bg-gray-100 hover:bg-slate-700 text-gray-800 border border-gray-200 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer"
               >
                 <FileText className="w-4 h-4 text-emerald-400" /> Create Assignment
               </button>
             </div>
           </div>
-
-          {/* Navigation Bar Tabs */}
-          <div className="mt-8 pt-6 border-t border-slate-800 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-            {[
-              { id: 'overview', label: 'Overview', icon: Building2 },
-              { id: 'experiments', label: 'Course Experiments', icon: FileCode },
-              { id: 'sessions', label: 'Practical Lab Sessions', icon: Clock },
-              { id: 'assignments', label: 'Course Assignments', icon: FileText },
-              { id: 'plagiarism', label: 'Plagiarism Audit', icon: Search },
-            ].map((tab) => {
-              const Icon = tab.icon;
-              const active = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
-                    active
-                      ? 'bg-slate-800 text-white border border-slate-700 shadow-sm'
-                      : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-900'
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
           </div>
-        </div>
-
-        {/* TAB 1: OVERVIEW */}
+          {/* TAB 1: OVERVIEW */}
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-emerald-400" /> Assigned Courses & Allocated Batches
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {subjects.map((subj) => (
-                <div key={subj.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-md">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div key={subj.id} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-md">
+                  <div className="flex items-center justify-between border-b border-gray-200 pb-3">
                     <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold rounded-md">
                       {subj.code}
                     </span>
-                    <span className="text-xs text-slate-400">{subj.department?.code}</span>
+                    <span className="text-xs text-gray-500">{subj.department?.code}</span>
                   </div>
-                  <h3 className="text-base font-bold text-white">{subj.name}</h3>
+                  <h3 className="text-base font-bold text-gray-900">{subj.name}</h3>
 
                   <div className="space-y-2 pt-1">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Allocated Batches:</span>
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider block">Allocated Batches:</span>
                     <div className="flex flex-wrap gap-2">
                       {(subj.facultyAllocations || []).map((fa: any) => (
-                        <span key={fa.id} className="px-3 py-1 bg-slate-800 border border-slate-700 text-slate-200 text-xs font-medium rounded-md">
+                        <span key={fa.id} className="px-3 py-1 bg-gray-100 border border-gray-200 text-gray-800 text-xs font-medium rounded-md">
                           {fa.batch?.name} ({fa.batch?.division?.name || 'Div D'})
                         </span>
                       ))}
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-800 flex items-center justify-between">
+                  <div className="pt-3 border-t border-gray-200 flex items-center justify-between">
                     <button
                       onClick={() => {
                         setSelectedSubjectId(subj.id);
@@ -419,10 +404,10 @@ export default function FacultyDashboard() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <FileCode className="w-5 h-5 text-emerald-400" /> Syllabus Experiments for {currentSubject?.name} ({currentSubject?.code})
                 </h2>
-                <p className="text-xs text-slate-400">Add experiments and configure problem statements.</p>
+                <p className="text-xs text-gray-500">Add experiments and configure problem statements.</p>
               </div>
 
               <div className="flex items-center gap-3">
@@ -432,7 +417,7 @@ export default function FacultyDashboard() {
                     setSelectedSubjectId(e.target.value);
                     fetchExperiments(e.target.value);
                   }}
-                  className="px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-100 font-medium"
+                  className="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs text-gray-900 font-medium"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -446,7 +431,7 @@ export default function FacultyDashboard() {
                     setExpNo(String(experiments.length + 1));
                     setShowExpModal(true);
                   }}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 cursor-pointer"
                 >
                   <Plus className="w-4 h-4" /> Add Experiment
                 </button>
@@ -455,39 +440,39 @@ export default function FacultyDashboard() {
 
             <div className="space-y-4">
               {experiments.length === 0 ? (
-                <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-400 text-xs">
+                <div className="p-12 text-center bg-white border border-gray-200 rounded-2xl text-gray-500 text-xs">
                   No experiments created yet for this course. Click "Add Experiment" to create one.
                 </div>
               ) : (
                 experiments.map((exp) => (
-                  <div key={exp.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-md">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-3 gap-2">
+                  <div key={exp.id} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-md">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200 pb-3 gap-2">
                       <div className="flex items-center gap-3">
                         <span className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold text-xs font-mono">
                           #{exp.experimentNo}
                         </span>
-                        <h3 className="text-base font-bold text-white">{exp.title}</h3>
+                        <h3 className="text-base font-bold text-gray-900">{exp.title}</h3>
                       </div>
                       <button
                         onClick={() => {
                           setTargetExpId(exp.id);
                           setShowQuestionModal(true);
                         }}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+                        className="px-3 py-1.5 bg-gray-100 hover:bg-slate-700 text-emerald-400 border border-gray-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
                       >
                         <Plus className="w-3.5 h-3.5" /> Add Question
                       </button>
                     </div>
 
-                    <p className="text-xs text-slate-300 leading-relaxed">{exp.description}</p>
+                    <p className="text-xs text-gray-700 leading-relaxed">{exp.description}</p>
 
                     {/* Question Sub-items */}
                     <div className="space-y-2 pt-2">
                       {(exp.questions || []).map((q: any) => (
-                        <div key={q.id} className="p-3 bg-slate-950 border border-slate-800/80 rounded-xl flex items-center justify-between text-xs">
+                        <div key={q.id} className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between text-xs">
                           <div>
-                            <div className="font-semibold text-slate-200">{q.title}</div>
-                            <div className="text-[11px] text-slate-400">{q.description}</div>
+                            <div className="font-semibold text-gray-800">{q.title}</div>
+                            <div className="text-[11px] text-gray-500">{q.description}</div>
                           </div>
                           <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold rounded">
                             {q.difficulty} | {q.marks} Marks
@@ -507,10 +492,10 @@ export default function FacultyDashboard() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <Clock className="w-5 h-5 text-emerald-400" /> Scheduled & Active Practical Lab Sessions
                 </h2>
-                <p className="text-xs text-slate-400">Monitor active lab sessions, launch live practicals, and control leaderboard visibility.</p>
+                <p className="text-xs text-gray-500">Monitor active lab sessions, launch live practicals, and control leaderboard visibility.</p>
               </div>
 
               <button
@@ -523,15 +508,15 @@ export default function FacultyDashboard() {
                   setSessEnd(toLocalISO(end));
                   setShowSessionModal(true);
                 }}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> Schedule New Lab
               </button>
             </div>
 
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-md">
-              <table className="w-full text-left text-xs text-slate-300">
-                <thead className="bg-slate-950 text-slate-400 font-semibold uppercase tracking-wider">
+            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md">
+              <table className="w-full text-left text-xs text-gray-700">
+                <thead className="bg-gray-50 text-gray-500 font-semibold uppercase tracking-wider">
                   <tr>
                     <th className="py-3.5 px-4">Subject</th>
                     <th className="py-3.5 px-4">Experiment</th>
@@ -544,21 +529,21 @@ export default function FacultyDashboard() {
                 <tbody className="divide-y divide-slate-800">
                   {sessions.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500 italic">
+                      <td colSpan={6} className="py-8 text-center text-gray-500 italic">
                         No lab sessions scheduled yet. Click "Schedule New Lab" to create one.
                       </td>
                     </tr>
                   ) : (
                     sessions.map((sess) => (
-                      <tr key={sess.id} className="hover:bg-slate-800/40 transition-colors">
-                        <td className="py-3.5 px-4 font-semibold text-white">{sess.subject?.name}</td>
-                        <td className="py-3.5 px-4 text-slate-200">{sess.experiment?.title || 'Experiment'}</td>
+                      <tr key={sess.id} className="hover:bg-gray-100/40 transition-colors">
+                        <td className="py-3.5 px-4 font-semibold text-gray-900">{sess.subject?.name}</td>
+                        <td className="py-3.5 px-4 text-gray-800">{sess.experiment?.title || 'Experiment'}</td>
                         <td className="py-3.5 px-4">
-                          <span className="px-2 py-0.5 bg-slate-800 border border-slate-700 rounded text-slate-300 font-medium">
+                          <span className="px-2 py-0.5 bg-gray-100 border border-gray-200 rounded text-gray-700 font-medium">
                             {sess.batch?.name || 'Batch 1'}
                           </span>
                         </td>
-                        <td className="py-3.5 px-4 text-slate-400 font-mono text-[11px]">
+                        <td className="py-3.5 px-4 text-gray-500 font-mono text-[11px]">
                           {new Date(sess.startTime).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} - {new Date(sess.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </td>
                         <td className="py-3.5 px-4">
@@ -567,7 +552,7 @@ export default function FacultyDashboard() {
                               sess.status === 'ACTIVE'
                                 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
                                 : sess.status === 'COMPLETED'
-                                ? 'bg-slate-800 text-slate-400 border border-slate-700'
+                                ? 'bg-gray-100 text-gray-500 border border-gray-200'
                                 : 'bg-blue-500/20 text-blue-400 border border-blue-500/40'
                             }`}
                           >
@@ -579,21 +564,21 @@ export default function FacultyDashboard() {
                             {sess.status !== 'ACTIVE' ? (
                               <button
                                 onClick={() => handleStartLabSession(sess.id)}
-                                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-xs transition-all shadow-sm cursor-pointer flex items-center gap-1"
+                                className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-gray-900 font-semibold rounded-lg text-xs transition-all shadow-sm cursor-pointer flex items-center gap-1"
                               >
                                 <Play className="w-3 h-3 fill-current" /> Start Lab
                               </button>
                             ) : (
                               <button
                                 onClick={() => handleCloseLabSession(sess.id)}
-                                className="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 font-semibold rounded-lg text-xs transition-all cursor-pointer flex items-center gap-1"
+                                className="px-3 py-1 bg-gray-100 hover:bg-slate-700 text-gray-700 border border-gray-200 font-semibold rounded-lg text-xs transition-all cursor-pointer flex items-center gap-1"
                               >
-                                <StopCircle className="w-3 h-3 text-red-400" /> End Lab
+                                <StopCircle className="w-3 h-3 text-red-700" /> End Lab
                               </button>
                             )}
                             <button
                               onClick={() => handleCheckPlagiarism(sess.id)}
-                              className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium cursor-pointer"
+                              className="px-2.5 py-1 bg-gray-100 hover:bg-slate-700 text-gray-700 border border-gray-200 rounded-lg text-xs font-medium cursor-pointer"
                             >
                               Plagiarism
                             </button>
@@ -613,14 +598,14 @@ export default function FacultyDashboard() {
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                   <FileText className="w-5 h-5 text-emerald-400" /> Course Assignments & Submissions
                 </h2>
-                <p className="text-xs text-slate-400">Create written homework, case studies, and track student submissions.</p>
+                <p className="text-xs text-gray-500">Create written homework, case studies, and track student submissions.</p>
               </div>
               <button
                 onClick={() => setShowAssignModal(true)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold shadow-md flex items-center gap-1.5 cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> Create Assignment
               </button>
@@ -628,21 +613,21 @@ export default function FacultyDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {assignments.length === 0 ? (
-                <div className="col-span-2 p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-400 text-xs">
+                <div className="col-span-2 p-12 text-center bg-white border border-gray-200 rounded-2xl text-gray-500 text-xs">
                   No assignments created yet. Click "Create Assignment" to post one.
                 </div>
               ) : (
                 assignments.map((asg) => (
-                  <div key={asg.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-3 shadow-md">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                      <h3 className="text-base font-bold text-white">{asg.title}</h3>
+                  <div key={asg.id} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-3 shadow-md">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+                      <h3 className="text-base font-bold text-gray-900">{asg.title}</h3>
                       <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold rounded">
                         Max Marks: {asg.maxMarks}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-300">{asg.description}</p>
-                    <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                      <span>Course: <strong className="text-slate-200">{asg.subject?.name}</strong></span>
+                    <p className="text-xs text-gray-700">{asg.description}</p>
+                    <div className="pt-2 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500">
+                      <span>Course: <strong className="text-gray-800">{asg.subject?.name}</strong></span>
                       <span>Deadline: {new Date(asg.deadline).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                   </div>
@@ -655,88 +640,87 @@ export default function FacultyDashboard() {
         {/* TAB 5: PLAGIARISM */}
         {activeTab === 'plagiarism' && (
           <div className="space-y-6">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
               <Search className="w-5 h-5 text-emerald-400" /> AST Code Plagiarism Scanner
             </h2>
 
             {scanningPlagiarism ? (
-              <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-400 text-xs">
+              <div className="p-12 text-center bg-white border border-gray-200 rounded-2xl text-gray-500 text-xs">
                 Scanning AST tokens for code similarity...
               </div>
             ) : plagiarismReport ? (
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
-                <h3 className="text-base font-bold text-white">Similarity Audit Results</h3>
+              <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
+                <h3 className="text-base font-bold text-gray-900">Similarity Audit Results</h3>
                 {(plagiarismReport.matches || []).map((m: any, idx: number) => (
-                  <div key={idx} className="p-4 bg-slate-950 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
+                  <div key={idx} className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between text-xs">
                     <div>
-                      <span className="font-semibold text-white">{m.studentA}</span> vs <span className="font-semibold text-white">{m.studentB}</span>
+                      <span className="font-semibold text-gray-900">{m.studentA}</span> vs <span className="font-semibold text-gray-900">{m.studentB}</span>
                     </div>
-                    <span className="px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 font-bold rounded-md">
+                    <span className="px-3 py-1 bg-red-50 text-red-700 border border-red-200 font-bold rounded-md">
                       {m.similarity}% Similarity
                     </span>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-400 text-xs">
+              <div className="p-12 text-center bg-white border border-gray-200 rounded-2xl text-gray-500 text-xs">
                 Select a lab session under "Practical Lab Sessions" to run the AST similarity scan.
               </div>
             )}
           </div>
         )}
-      </main>
 
       {/* CREATE EXPERIMENT MODAL */}
       {showExpModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">Add Course Experiment</h3>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Add Course Experiment</h3>
             <form onSubmit={handleCreateExperiment} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">Experiment Number</label>
+                <label className="block text-gray-500 mb-1">Experiment Number</label>
                 <input
                   type="number"
                   required
                   value={expNo}
                   onChange={(e) => setExpNo(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Experiment Title</label>
+                <label className="block text-gray-500 mb-1">Experiment Title</label>
                 <input
                   type="text"
                   required
                   value={expTitle}
                   onChange={(e) => setExpTitle(e.target.value)}
                   placeholder="e.g. Matrix Multiplication & Arrays"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Description / Problem Statement</label>
+                <label className="block text-gray-500 mb-1">Description / Problem Statement</label>
                 <textarea
                   rows={3}
                   value={expDesc}
                   onChange={(e) => setExpDesc(e.target.value)}
                   placeholder="Write clear instructions for students..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={() => setShowExpModal(false)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Save Experiment
                 </button>
@@ -749,18 +733,18 @@ export default function FacultyDashboard() {
       {/* SCHEDULE SESSION MODAL */}
       {showSessionModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">Schedule Practical Lab Session</h3>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Schedule Practical Lab Session</h3>
             <form onSubmit={handleScheduleSession} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">Subject</label>
+                <label className="block text-gray-500 mb-1">Subject</label>
                 <select
                   value={sessSubjId}
                   onChange={(e) => {
                     setSessSubjId(e.target.value);
                     fetchExperiments(e.target.value);
                   }}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -771,11 +755,11 @@ export default function FacultyDashboard() {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Experiment</label>
+                <label className="block text-gray-500 mb-1">Experiment</label>
                 <select
                   value={sessExpId}
                   onChange={(e) => setSessExpId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
                   {experiments.map((e) => (
                     <option key={e.id} value={e.id}>
@@ -786,11 +770,11 @@ export default function FacultyDashboard() {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Allocated Student Batch</label>
+                <label className="block text-gray-500 mb-1">Allocated Student Batch</label>
                 <select
                   value={sessBatchId}
                   onChange={(e) => setSessBatchId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
                   {allBatches.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -801,38 +785,38 @@ export default function FacultyDashboard() {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Start Date & Time</label>
+                <label className="block text-gray-500 mb-1">Start Date & Time</label>
                 <input
                   type="datetime-local"
                   required
                   value={sessStart}
                   onChange={(e) => setSessStart(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">End Date & Time</label>
+                <label className="block text-gray-500 mb-1">End Date & Time</label>
                 <input
                   type="datetime-local"
                   required
                   value={sessEnd}
                   onChange={(e) => setSessEnd(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={() => setShowSessionModal(false)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Save Schedule
                 </button>
@@ -845,38 +829,38 @@ export default function FacultyDashboard() {
       {/* CREATE QUESTION MODAL */}
       {showQuestionModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">Add Practical Question</h3>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Add Practical Question</h3>
             <form onSubmit={handleCreateQuestion} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">Question Title</label>
+                <label className="block text-gray-500 mb-1">Question Title</label>
                 <input
                   type="text"
                   required
                   value={qTitle}
                   onChange={(e) => setQTitle(e.target.value)}
                   placeholder="e.g. Implement Matrix Multiplication Function"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Problem Description</label>
+                <label className="block text-gray-500 mb-1">Problem Description</label>
                 <textarea
                   rows={2}
                   value={qDesc}
                   onChange={(e) => setQDesc(e.target.value)}
                   placeholder="Problem details..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Difficulty</label>
+                <label className="block text-gray-500 mb-1">Difficulty</label>
                 <select
                   value={qDiff}
                   onChange={(e) => setQDiff(e.target.value as any)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
                   <option value="EASY">EASY</option>
                   <option value="MEDIUM">MEDIUM</option>
@@ -885,38 +869,38 @@ export default function FacultyDashboard() {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Test Case Input</label>
+                <label className="block text-gray-500 mb-1">Test Case Input</label>
                 <input
                   type="text"
                   value={qTcInput}
                   onChange={(e) => setQTcInput(e.target.value)}
                   placeholder="1.0 2.0 3.0"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Expected Output</label>
+                <label className="block text-gray-500 mb-1">Expected Output</label>
                 <input
                   type="text"
                   value={qTcOutput}
                   onChange={(e) => setQTcOutput(e.target.value)}
                   placeholder="1.0 2.0 3.0"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={() => setShowQuestionModal(false)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Save Question
                 </button>
@@ -929,15 +913,15 @@ export default function FacultyDashboard() {
       {/* CREATE ASSIGNMENT MODAL */}
       {showAssignModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">Create Course Assignment</h3>
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Create Course Assignment</h3>
             <form onSubmit={handleCreateAssignment} className="space-y-4 text-xs">
               <div>
-                <label className="block text-slate-400 mb-1">Subject</label>
+                <label className="block text-gray-500 mb-1">Subject</label>
                 <select
                   value={asgSubjId}
                   onChange={(e) => setAsgSubjId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
                   {subjects.map((s) => (
                     <option key={s.id} value={s.id}>
@@ -948,11 +932,11 @@ export default function FacultyDashboard() {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Batch</label>
+                <label className="block text-gray-500 mb-1">Batch</label>
                 <select
                   value={asgBatchId}
                   onChange={(e) => setAsgBatchId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
                   {allBatches.map((b) => (
                     <option key={b.id} value={b.id}>
@@ -963,50 +947,50 @@ export default function FacultyDashboard() {
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Assignment Title</label>
+                <label className="block text-gray-500 mb-1">Assignment Title</label>
                 <input
                   type="text"
                   required
                   value={asgTitle}
                   onChange={(e) => setAsgTitle(e.target.value)}
                   placeholder="e.g. Case Study: Neural Network Architectures"
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Description</label>
+                <label className="block text-gray-500 mb-1">Description</label>
                 <textarea
                   rows={2}
                   value={asgDesc}
                   onChange={(e) => setAsgDesc(e.target.value)}
                   placeholder="Assignment guidelines..."
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-400 mb-1">Deadline</label>
+                <label className="block text-gray-500 mb-1">Deadline</label>
                 <input
                   type="datetime-local"
                   required
                   value={asgDeadline}
                   onChange={(e) => setAsgDeadline(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-slate-100"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
                   onClick={() => setShowAssignModal(false)}
-                  className="px-4 py-2 bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Post Assignment
                 </button>
@@ -1016,5 +1000,6 @@ export default function FacultyDashboard() {
         </div>
       )}
     </div>
+    </SidebarLayout>
   );
 }
