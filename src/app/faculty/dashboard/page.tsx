@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SidebarLayout from '@/components/SidebarLayout';
+import TimetableMonthView from '@/components/TimetableMonthView';
 import {
   BookOpen,
   Calendar,
@@ -17,10 +18,12 @@ import {
   Users,
   Building2,
   CheckCheck,
-  UserCheck,
+  UserCheck, Download,
   Shield,
   Layers,
   StopCircle,
+  Edit,
+  Trash2,
 } from 'lucide-react';
 
 export default function FacultyDashboard() { 
@@ -31,11 +34,12 @@ export default function FacultyDashboard() {
     { id: 'experiments', label: 'Course Experiments', icon: FileCode },
     { id: 'sessions', label: 'Practical Lab Sessions', icon: Clock },
     { id: 'assignments', label: 'Course Assignments', icon: FileText },
+    { id: 'timetable', label: 'Timetable Schedule', icon: Calendar },
     { id: 'plagiarism', label: 'Plagiarism Audit', icon: Search },
   ];
 
   const [user, setUser] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'sessions' | 'assignments' | 'plagiarism'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'sessions' | 'assignments' | 'plagiarism' | 'timetable'>('overview');
 
   // Data states
   const [subjects, setSubjects] = useState<any[]>([]);
@@ -43,7 +47,7 @@ export default function FacultyDashboard() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
   const [timetableSlots, setTimetableSlots] = useState<any[]>([]);
-  const [allBatches, setAllBatches] = useState<any[]>([]);
+
   const [plagiarismReport, setPlagiarismReport] = useState<any>(null);
   const [scanningPlagiarism, setScanningPlagiarism] = useState(false);
 
@@ -52,7 +56,9 @@ export default function FacultyDashboard() {
 
   // Modals
   const [showExpModal, setShowExpModal] = useState(false);
+  const [editingExperiment, setEditingExperiment] = useState<any>(null);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [editingQuestion, setEditingQuestion] = useState<any>(null);
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
 
@@ -66,9 +72,9 @@ export default function FacultyDashboard() {
   const [qTitle, setQTitle] = useState('');
   const [qDesc, setQDesc] = useState('');
   const [qDiff, setQDiff] = useState<'EASY' | 'MEDIUM' | 'HARD'>('MEDIUM');
+  const [qMarks, setQMarks] = useState('10');
   const [qLanguages, setQLanguages] = useState<string[]>(['python', 'cpp', 'c', 'java']);
-  const [qTcInput, setQTcInput] = useState('1.0 2.0 3.0');
-  const [qTcOutput, setQTcOutput] = useState('1.0 2.0 3.0');
+  const [qTestCases, setQTestCases] = useState([{ input: '1.0 2.0 3.0', expectedOutput: '1.0 2.0 3.0', isHidden: false }]);
 
   // Session form
   const [sessSubjId, setSessSubjId] = useState('');
@@ -94,21 +100,13 @@ export default function FacultyDashboard() {
         if (data.user) loadFacultyData(data.user.id);
       });
 
-    // Load available batches for selection
-    fetch('/api/admin/batches')
-      .then((res) => res.json())
-      .then((d) => setAllBatches(d.batches || []));
   }, []);
 
   const loadFacultyData = (facultyId: string) => {
-    fetch('/api/admin/subjects')
+    fetch('/api/faculty/subjects')
       .then((res) => res.json())
       .then((d) => {
-        const allSubs = d.subjects || [];
-        const assignedSubs = allSubs.filter((s: any) =>
-          s.facultyAllocations?.some((fa: any) => fa.facultyId === facultyId)
-        );
-        const displaySubs = assignedSubs.length > 0 ? assignedSubs : allSubs;
+        const displaySubs = d.subjects || [];
         setSubjects(displaySubs);
         if (displaySubs.length > 0) {
           const initialSubjId = displaySubs[0].id;
@@ -144,49 +142,142 @@ export default function FacultyDashboard() {
       });
   };
 
-  const handleCreateExperiment = async (e: React.FormEvent) => {
+  const openCreateExperiment = () => {
+    setEditingExperiment(null);
+    setExpNo('');
+    setExpTitle('');
+    setExpDesc('');
+    setShowExpModal(true);
+  };
+
+  const openEditExperiment = (exp: any) => {
+    setEditingExperiment(exp);
+    setExpNo(exp.experimentNo.toString());
+    setExpTitle(exp.title);
+    setExpDesc(exp.description || '');
+    setShowExpModal(true);
+  };
+
+  const handleDeleteExperiment = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this experiment?')) return;
+    await fetch(`/api/faculty/experiments?id=${id}`, { method: 'DELETE' });
+    const actualSubjId = selectedSubjectId || subjects[0]?.id;
+    if (actualSubjId) fetchExperiments(actualSubjId);
+  };
+
+  const handleSaveExperiment = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/faculty/experiments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        subjectId: selectedSubjectId,
-        experimentNo: expNo,
-        title: expTitle,
-        description: expDesc,
-      }),
-    });
+    const actualSubjId = selectedSubjectId || subjects[0]?.id;
+    if (!actualSubjId) return;
+
+    const payload = {
+      subjectId: actualSubjId,
+      experimentNo: expNo,
+      title: expTitle,
+      description: expDesc,
+    };
+
+    if (editingExperiment) {
+      await fetch('/api/faculty/experiments', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editingExperiment.id, ...payload }),
+      });
+    } else {
+      await fetch('/api/faculty/experiments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    }
+
     setExpTitle('');
     setExpDesc('');
     setShowExpModal(false);
-    fetchExperiments(selectedSubjectId);
+    fetchExperiments(actualSubjId);
   };
 
-  const handleCreateQuestion = async (e: React.FormEvent) => {
+  const openCreateQuestion = (expId: string) => {
+    setTargetExpId(expId);
+    setEditingQuestion(null);
+    setQTitle('');
+    setQDesc('');
+    setQDiff('MEDIUM');
+    setQMarks('10');
+    setQTestCases([{ input: '', expectedOutput: '', isHidden: false }]);
+    setShowQuestionModal(true);
+  };
+
+  const openEditQuestion = (expId: string, q: any) => {
+    setTargetExpId(expId);
+    setEditingQuestion(q);
+    setQTitle(q.title);
+    setQDesc(q.description || '');
+    setQDiff(q.difficulty);
+    setQMarks(q.marks.toString());
+    try {
+      setQLanguages(JSON.parse(q.allowedLanguagesJson || '["python","cpp","c","java"]'));
+    } catch {
+      setQLanguages(['python', 'cpp', 'c', 'java']);
+    }
+    if (q.testCases && q.testCases.length > 0) {
+      setQTestCases(q.testCases.map((tc: any) => ({
+        input: tc.input || '',
+        expectedOutput: tc.expectedOutput || '',
+        isHidden: tc.isHidden || false,
+      })));
+    } else {
+      setQTestCases([{ input: '', expectedOutput: '', isHidden: false }]);
+    }
+    setShowQuestionModal(true);
+  };
+
+  const handleDeleteQuestion = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this question?')) return;
+    await fetch(`/api/faculty/questions?id=${id}`, { method: 'DELETE' });
+    const actualSubjId = selectedSubjectId || subjects[0]?.id;
+    if (actualSubjId) fetchExperiments(actualSubjId);
+  };
+
+  const handleSaveQuestion = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/faculty/questions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        experimentId: targetExpId,
-        title: qTitle,
-        description: qDesc,
-        difficulty: qDiff,
-        allowedLanguages: qLanguages,
-        testCases: [{ input: qTcInput, expectedOutput: qTcOutput, isHidden: false }],
-      }),
-    });
+    const payload = {
+      experimentId: targetExpId,
+      title: qTitle,
+      description: qDesc,
+      difficulty: qDiff,
+      marks: parseFloat(qMarks),
+      allowedLanguages: qLanguages,
+      testCases: qTestCases,
+    };
+
+    if (editingQuestion) {
+      await fetch('/api/faculty/questions', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: editingQuestion.id, ...payload }),
+      });
+    } else {
+      await fetch('/api/faculty/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    }
+
     setQTitle('');
     setQDesc('');
     setShowQuestionModal(false);
-    fetchExperiments(selectedSubjectId);
+    const actualSubjId = selectedSubjectId || subjects[0]?.id;
+    if (actualSubjId) fetchExperiments(actualSubjId);
   };
 
   const handleScheduleSession = async (e: React.FormEvent) => {
     e.preventDefault();
     const subId = sessSubjId || selectedSubjectId || subjects[0]?.id;
     const expId = sessExpId || experiments[0]?.id;
-    const batchId = sessBatchId || allBatches[0]?.id;
+    const currentBatches = subjects.find(s => s.id === subId)?.allocatedBatches || [];
+    const batchId = sessBatchId || currentBatches[0]?.id;
 
     const now = new Date();
     const startTime = sessStart ? new Date(sessStart).toISOString() : now.toISOString();
@@ -234,7 +325,8 @@ export default function FacultyDashboard() {
   const handleCreateAssignment = async (e: React.FormEvent) => {
     e.preventDefault();
     const subId = asgSubjId || selectedSubjectId || subjects[0]?.id;
-    const batchId = asgBatchId || allBatches[0]?.id;
+    const currentBatches = subjects.find(s => s.id === subId)?.allocatedBatches || [];
+    const batchId = asgBatchId || currentBatches[0]?.id;
 
     await fetch('/api/faculty/assignments', {
       method: 'POST',
@@ -453,15 +545,28 @@ export default function FacultyDashboard() {
                         </span>
                         <h3 className="text-base font-bold text-gray-900">{exp.title}</h3>
                       </div>
-                      <button
-                        onClick={() => {
-                          setTargetExpId(exp.id);
-                          setShowQuestionModal(true);
-                        }}
-                        className="px-3 py-1.5 bg-gray-100 hover:bg-slate-700 text-emerald-400 border border-gray-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" /> Add Question
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openEditExperiment(exp)}
+                          className="p-1.5 text-gray-400 hover:text-blue-600 bg-gray-50 border border-gray-200 rounded-lg shadow-sm"
+                          title="Edit Experiment"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteExperiment(exp.id)}
+                          className="p-1.5 text-gray-400 hover:text-red-600 bg-gray-50 border border-gray-200 rounded-lg shadow-sm"
+                          title="Delete Experiment"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => openCreateQuestion(exp.id)}
+                          className="px-3 py-1.5 bg-gray-100 hover:bg-slate-700 text-emerald-400 border border-gray-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer ml-2"
+                        >
+                          <Plus className="w-3.5 h-3.5" /> Add Question
+                        </button>
+                      </div>
                     </div>
 
                     <p className="text-xs text-gray-700 leading-relaxed">{exp.description}</p>
@@ -474,9 +579,27 @@ export default function FacultyDashboard() {
                             <div className="font-semibold text-gray-800">{q.title}</div>
                             <div className="text-[11px] text-gray-500">{q.description}</div>
                           </div>
-                          <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold rounded">
-                            {q.difficulty} | {q.marks} Marks
-                          </span>
+                          <div className="flex items-center gap-3">
+                            <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold rounded">
+                              {q.difficulty} | {q.marks} Marks
+                            </span>
+                            <div className="flex items-center gap-1">
+                              <button
+                                onClick={() => openEditQuestion(exp.id, q)}
+                                className="p-1 text-gray-400 hover:text-blue-600 bg-white border border-gray-200 rounded shadow-sm"
+                                title="Edit Question"
+                              >
+                                <Edit className="w-3 h-3" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteQuestion(q.id)}
+                                className="p-1 text-gray-400 hover:text-red-600 bg-white border border-gray-200 rounded shadow-sm"
+                                title="Delete Question"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -618,22 +741,64 @@ export default function FacultyDashboard() {
                 </div>
               ) : (
                 assignments.map((asg) => (
-                  <div key={asg.id} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-3 shadow-md">
-                    <div className="flex items-center justify-between border-b border-gray-200 pb-2">
-                      <h3 className="text-base font-bold text-gray-900">{asg.title}</h3>
-                      <span className="px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold rounded">
+                  <div key={asg.id} className="col-span-2 bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-md">
+                    <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">{asg.title}</h3>
+                        <div className="text-[11px] text-gray-500 mt-1">
+                          Course: <strong className="text-gray-800">{asg.subject?.name}</strong> | 
+                          Deadline: {new Date(asg.deadline).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                      <span className="px-2.5 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-semibold rounded-md">
                         Max Marks: {asg.maxMarks}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-700">{asg.description}</p>
-                    <div className="pt-2 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500">
-                      <span>Course: <strong className="text-gray-800">{asg.subject?.name}</strong></span>
-                      <span>Deadline: {new Date(asg.deadline).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                    <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-xl border border-gray-100">{asg.description}</p>
+                    
+                    <div className="pt-2">
+                      <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">Student Submissions ({asg.submissions?.length || 0})</h4>
+                      {asg.submissions && asg.submissions.length > 0 ? (
+                        <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                          {asg.submissions.map((sub: any) => (
+                            <div key={sub.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                              <div className="flex flex-col">
+                                <span className="text-sm font-bold text-gray-900">{sub.student?.name} <span className="text-xs text-gray-500 font-normal">({sub.student?.rollNo || sub.student?.email})</span></span>
+                                <span className="text-[10px] text-gray-500">Submitted: {new Date(sub.submittedAt).toLocaleString()} {sub.isLate && <span className="text-red-500 font-bold ml-1">LATE</span>}</span>
+                              </div>
+                              <div className="flex items-center gap-3">
+                                {sub.textSolution && (
+                                  <button className="text-xs text-blue-600 hover:underline font-semibold" onClick={() => alert(sub.textSolution)}>View Notes</button>
+                                )}
+                                {sub.fileUrl ? (
+                                  <a href={sub.fileUrl} target="_blank" rel="noreferrer" className="px-3 py-1.5 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-semibold rounded-lg flex items-center gap-1 cursor-pointer">
+                                    <Download className="w-3.5 h-3.5" /> File
+                                  </a>
+                                ) : (
+                                  <span className="text-xs text-gray-400 italic">No file</span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-xs text-gray-500 italic p-4 bg-gray-50 border border-gray-200 rounded-xl text-center">No submissions received yet.</div>
+                      )}
                     </div>
                   </div>
                 ))
               )}
             </div>
+          </div>
+        )}
+
+        {/* TAB 6: TIMETABLE */}
+        {activeTab === 'timetable' && (
+          <div className="space-y-6">
+            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-2">
+              <Calendar className="w-5 h-5 text-blue-700" /> Allocated Teaching Timetable Schedule
+            </h2>
+            <TimetableMonthView slots={timetableSlots} userName={user?.name || 'Faculty'} />
           </div>
         )}
 
@@ -674,8 +839,10 @@ export default function FacultyDashboard() {
       {showExpModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Add Course Experiment</h3>
-            <form onSubmit={handleCreateExperiment} className="space-y-4 text-xs">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">
+              {editingExperiment ? 'Edit Course Experiment' : 'Add Course Experiment'}
+            </h3>
+            <form onSubmit={handleSaveExperiment} className="space-y-4 text-xs">
               <div>
                 <label className="block text-gray-500 mb-1">Experiment Number</label>
                 <input
@@ -722,7 +889,7 @@ export default function FacultyDashboard() {
                   type="submit"
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
-                  Save Experiment
+                  {editingExperiment ? 'Update Experiment' : 'Save Experiment'}
                 </button>
               </div>
             </form>
@@ -776,9 +943,9 @@ export default function FacultyDashboard() {
                   onChange={(e) => setSessBatchId(e.target.value)}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
-                  {allBatches.map((b) => (
+                  {(subjects.find(s => s.id === (sessSubjId || selectedSubjectId || subjects[0]?.id))?.allocatedBatches || []).map((b: any) => (
                     <option key={b.id} value={b.id}>
-                      {b.name} ({b.division?.name || 'Div D'})
+                      {b.name} ({b.division?.name || 'Div'})
                     </option>
                   ))}
                 </select>
@@ -830,8 +997,10 @@ export default function FacultyDashboard() {
       {showQuestionModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Add Practical Question</h3>
-            <form onSubmit={handleCreateQuestion} className="space-y-4 text-xs">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">
+              {editingQuestion ? 'Edit Practical Question' : 'Add Practical Question'}
+            </h3>
+            <form onSubmit={handleSaveQuestion} className="space-y-4 text-xs">
               <div>
                 <label className="block text-gray-500 mb-1">Question Title</label>
                 <input
@@ -868,26 +1037,71 @@ export default function FacultyDashboard() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-gray-500 mb-1">Test Case Input</label>
-                <input
-                  type="text"
-                  value={qTcInput}
-                  onChange={(e) => setQTcInput(e.target.value)}
-                  placeholder="1.0 2.0 3.0"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-500 mb-1">Expected Output</label>
-                <input
-                  type="text"
-                  value={qTcOutput}
-                  onChange={(e) => setQTcOutput(e.target.value)}
-                  placeholder="1.0 2.0 3.0"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
-                />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <label className="block text-gray-700 font-bold mb-1">Test Cases</label>
+                  <button
+                    type="button"
+                    onClick={() => setQTestCases([...qTestCases, { input: '', expectedOutput: '', isHidden: false }])}
+                    className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded font-bold hover:bg-emerald-200"
+                  >
+                    + Add Test Case
+                  </button>
+                </div>
+                {qTestCases.map((tc, idx) => (
+                  <div key={idx} className="p-3 bg-gray-50 border border-gray-200 rounded-xl space-y-2 relative">
+                    {qTestCases.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => setQTestCases(qTestCases.filter((_, i) => i !== idx))}
+                        className="absolute top-2 right-2 text-red-400 hover:text-red-600"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                    <div>
+                      <label className="block text-[10px] text-gray-500 mb-1 uppercase tracking-wider font-bold">Input</label>
+                      <input
+                        type="text"
+                        value={tc.input}
+                        onChange={(e) => {
+                          const newTc = [...qTestCases];
+                          newTc[idx].input = e.target.value;
+                          setQTestCases(newTc);
+                        }}
+                        placeholder="e.g. 1 2"
+                        className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded text-gray-900"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] text-gray-500 mb-1 uppercase tracking-wider font-bold">Expected Output</label>
+                      <input
+                        type="text"
+                        value={tc.expectedOutput}
+                        onChange={(e) => {
+                          const newTc = [...qTestCases];
+                          newTc[idx].expectedOutput = e.target.value;
+                          setQTestCases(newTc);
+                        }}
+                        placeholder="e.g. 3"
+                        className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded text-gray-900"
+                      />
+                    </div>
+                    <label className="flex items-center gap-2 mt-2 cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={tc.isHidden} 
+                        onChange={(e) => {
+                          const newTc = [...qTestCases];
+                          newTc[idx].isHidden = e.target.checked;
+                          setQTestCases(newTc);
+                        }}
+                        className="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                      />
+                      <span className="text-[10px] font-semibold text-gray-600">Hidden Test Case</span>
+                    </label>
+                  </div>
+                ))}
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
@@ -902,7 +1116,7 @@ export default function FacultyDashboard() {
                   type="submit"
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
-                  Save Question
+                  {editingQuestion ? 'Update Question' : 'Save Question'}
                 </button>
               </div>
             </form>
@@ -938,9 +1152,9 @@ export default function FacultyDashboard() {
                   onChange={(e) => setAsgBatchId(e.target.value)}
                   className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
                 >
-                  {allBatches.map((b) => (
+                  {(subjects.find(s => s.id === (asgSubjId || selectedSubjectId || subjects[0]?.id))?.allocatedBatches || []).map((b: any) => (
                     <option key={b.id} value={b.id}>
-                      {b.name} ({b.division?.name || 'Div D'})
+                      {b.name} ({b.division?.name || 'Div'})
                     </option>
                   ))}
                 </select>

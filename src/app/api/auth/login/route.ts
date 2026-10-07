@@ -2,9 +2,17 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { signJwtToken, UserSession } from '@/lib/auth';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(request: Request) {
   try {
+    const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
+    const limitStatus = rateLimit(`login_${ip}`, 5, 60000); // 5 attempts per minute
+    
+    if (!limitStatus.success) {
+      return NextResponse.json({ error: 'Too many login attempts. Please try again after a minute.' }, { status: 429 });
+    }
+
     const { email, password } = await request.json();
 
     if (!email || !password) {

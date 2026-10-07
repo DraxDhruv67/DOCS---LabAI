@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SidebarLayout from '@/components/SidebarLayout';
+import TimetableMonthView from '@/components/TimetableMonthView';
 import {
   Code2,
   Clock,
@@ -22,6 +23,8 @@ import {
   Layers,
   ArrowRight,
   Terminal,
+  AlertTriangle,
+  XCircle,
 } from 'lucide-react';
 
 export default function StudentDashboard() { 
@@ -62,6 +65,7 @@ export default function StudentDashboard() {
 
   const [executing, setExecuting] = useState(false);
   const [execResult, setExecResult] = useState<any>(null);
+  const [showResultPopup, setShowResultPopup] = useState(false);
   const [attempts, setAttempts] = useState<any[]>([]);
 
   // Assignment submission modal state
@@ -88,7 +92,7 @@ export default function StudentDashboard() {
   }, []);
 
   const loadStudentData = (currentUser: any) => {
-    fetch('/api/admin/subjects')
+    fetch('/api/student/subjects')
       .then((res) => res.json())
       .then((d) => {
         const subs = d.subjects || [];
@@ -171,7 +175,14 @@ export default function StudentDashboard() {
       });
 
       const data = await res.json();
+      
+      if (!res.ok) {
+        alert(data.error || 'Failed to execute code');
+        return;
+      }
+
       setExecResult(data.executionResult);
+      setShowResultPopup(true);
       fetchAttempts(sessId, activeQuestion.id);
     } catch (err) {
       console.error('Execution error:', err);
@@ -205,11 +216,12 @@ export default function StudentDashboard() {
           body: formData,
         });
         const uploadData = await uploadRes.json();
-        if (uploadRes.ok) {
-          uploadedFileUrl = uploadData.fileUrl;
-          uploadedFileName = uploadData.fileName;
-          uploadedFileSize = uploadData.fileSize;
+        if (!uploadRes.ok) {
+          throw new Error(uploadData.error || 'Failed to upload file');
         }
+        uploadedFileUrl = uploadData.fileUrl;
+        uploadedFileName = uploadData.fileName;
+        uploadedFileSize = uploadData.fileSize;
       }
 
       const res = await fetch('/api/student/assignments/submit', {
@@ -504,6 +516,27 @@ export default function StudentDashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Problem Statement Panel */}
               <div className="bg-white border border-gray-200 rounded-2xl p-5 space-y-4">
+                {questions.length > 1 && (
+                  <div className="flex flex-wrap gap-2 mb-2 border-b border-gray-100 pb-3">
+                    {questions.map((q, idx) => (
+                      <button
+                        key={q.id}
+                        onClick={() => {
+                          setActiveQuestion(q);
+                          const currentSessId = activeSessionInfo?.id || sessions[0]?.id;
+                          if (currentSessId) fetchAttempts(currentSessId, q.id);
+                        }}
+                        className={`px-3 py-1.5 text-[11px] font-semibold rounded-lg transition-colors ${
+                          activeQuestion?.id === q.id 
+                            ? 'bg-blue-700 text-white shadow-sm' 
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        Q{idx + 1}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 <h3 className="text-sm font-bold text-gray-900 border-b border-gray-200 pb-2">
                   {activeQuestion?.title || selectedExperiment.title}
                 </h3>
@@ -569,44 +602,11 @@ export default function StudentDashboard() {
         {/* TAB 3: TIMETABLE SCHEDULE */}
         {activeTab === 'timetable' && (
           <div className="space-y-6">
-            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2 mb-2">
               <Calendar className="w-5 h-5 text-blue-700" /> Allocated Lab Timetable Schedule
             </h2>
 
-            <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-md">
-              <table className="w-full text-left text-xs text-gray-700">
-                <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase">
-                  <tr>
-                    <th className="py-3 px-4">Day</th>
-                    <th className="py-3 px-4">Time</th>
-                    <th className="py-3 px-4">Subject</th>
-                    <th className="py-3 px-4">Faculty in Charge</th>
-                    <th className="py-3 px-4">Room</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800">
-                  {timetableSlots.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="py-8 text-center text-gray-500 italic">
-                        No timetable slots scheduled for your batch.
-                      </td>
-                    </tr>
-                  ) : (
-                    timetableSlots.map((slot) => (
-                      <tr key={slot.id} className="hover:bg-gray-100/40">
-                        <td className="py-3 px-4 font-bold text-blue-700">{slot.dayOfWeek}</td>
-                        <td className="py-3 px-4 font-mono text-gray-700">
-                          {slot.startTime} - {slot.endTime}
-                        </td>
-                        <td className="py-3 px-4 font-semibold text-gray-900">{slot.subject?.name}</td>
-                        <td className="py-3 px-4">{slot.faculty?.name}</td>
-                        <td className="py-3 px-4 text-emerald-400">{slot.roomNo}</td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <TimetableMonthView slots={timetableSlots} userName={user?.name || 'Student'} />
           </div>
         )}
 
@@ -734,6 +734,73 @@ export default function StudentDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Execution Result Popup */}
+      {showResultPopup && execResult && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 max-w-md w-full space-y-6 shadow-2xl text-center">
+            {execResult.status === 'PASSED' ? (
+              <>
+                <div className="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <CheckCircle2 className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-black text-gray-900 tracking-tight">Question Solved!</h3>
+                <p className="text-sm text-gray-500 pb-4 border-b border-gray-100">
+                  Great job! Your solution passed all test cases successfully.
+                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center">
+                    <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Time</span>
+                    <span className="text-lg font-mono font-bold text-blue-700">{execResult.executionTime}ms</span>
+                  </div>
+                  <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col items-center justify-center">
+                    <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Memory</span>
+                    <span className="text-lg font-mono font-bold text-emerald-600">{execResult.memoryUsed}MB</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                  {execResult.status === 'COMPILATION_ERROR' ? <AlertTriangle className="w-8 h-8" /> : <XCircle className="w-8 h-8" />}
+                </div>
+                <h3 className="text-2xl font-black text-gray-900 tracking-tight">
+                  {execResult.status === 'COMPILATION_ERROR' ? 'Compilation Error' : execResult.status === 'RUNTIME_ERROR' ? 'Runtime Error' : 'Test Case Failed'}
+                </h3>
+                
+                {execResult.aiSuggestions && (
+                  <div className="bg-indigo-50/50 border border-indigo-100 p-4 rounded-xl text-left mt-4">
+                    <h4 className="text-xs font-bold text-indigo-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5" /> AI Hint
+                    </h4>
+                    <p className="text-xs text-indigo-900 leading-relaxed">{execResult.aiSuggestions}</p>
+                  </div>
+                )}
+                
+                {execResult.status !== 'PASSED' && execResult.testResults && execResult.testResults.length > 0 && (
+                  <div className="text-left bg-gray-50 p-4 rounded-xl border border-gray-100 max-h-40 overflow-y-auto mt-4 text-xs">
+                    <h4 className="font-bold text-gray-700 mb-2">Failing Test Cases:</h4>
+                    {execResult.testResults.filter((tr: any) => !tr.passed).map((tr: any, idx: number) => (
+                      <div key={idx} className="mb-2 last:mb-0">
+                        <div className="text-gray-500">Input: <span className="text-gray-900 font-mono">{tr.isHidden ? 'Hidden' : tr.input}</span></div>
+                        <div className="text-gray-500">Expected: <span className="text-emerald-600 font-mono">{tr.isHidden ? 'Hidden' : tr.expectedOutput}</span></div>
+                        <div className="text-gray-500">Got: <span className="text-red-600 font-mono">{tr.actualOutput}</span></div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+
+            <button
+              onClick={() => setShowResultPopup(false)}
+              className={`w-full mt-4 px-4 py-3 text-white rounded-xl text-sm font-bold shadow-md cursor-pointer transition-colors ${execResult.status === 'PASSED' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-800 hover:bg-gray-900'}`}
+            >
+              {execResult.status === 'PASSED' ? 'Continue' : 'Back to Editor'}
+            </button>
           </div>
         </div>
       )}

@@ -81,3 +81,45 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ question: fullQuestion });
 }
+
+export async function PUT(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'FACULTY') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { id, title, description, difficulty, marks, allowedLanguages, testCases } = await request.json();
+  if (!id) return NextResponse.json({ error: 'Question ID is required' }, { status: 400 });
+
+  const question = await prisma.practicalQuestion.update({
+    where: { id },
+    data: {
+      ...(title !== undefined && { title: title.trim() }),
+      ...(description !== undefined && { description: description.trim() }),
+      ...(difficulty !== undefined && { difficulty: difficulty.toUpperCase() }),
+      ...(marks !== undefined && { marks: parseFloat(marks) }),
+      ...(allowedLanguages !== undefined && { allowedLanguagesJson: JSON.stringify(allowedLanguages) }),
+    },
+  });
+
+  if (Array.isArray(testCases) && testCases.length > 0) {
+    // For prototype: delete old test cases and recreate them
+    await prisma.testCase.deleteMany({ where: { questionId: id } });
+    await prisma.testCase.createMany({
+      data: testCases.map((tc: any) => ({
+        questionId: id,
+        input: tc.input || '',
+        expectedOutput: tc.expectedOutput || '',
+        isHidden: tc.isHidden ?? false,
+      })),
+    });
+  }
+
+  return NextResponse.json({ question });
+}
+
+export async function DELETE(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'FACULTY') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const id = new URL(request.url).searchParams.get('id');
+  if (!id) return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+  await prisma.practicalQuestion.delete({ where: { id } });
+  return NextResponse.json({ success: true });
+}

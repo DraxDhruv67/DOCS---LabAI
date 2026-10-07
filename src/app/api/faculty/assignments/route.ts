@@ -24,6 +24,9 @@ export async function GET(request: Request) {
       faculty: { select: { name: true } },
       submissions: {
         where: user.role === 'STUDENT' ? { studentId: user.id } : undefined,
+        include: {
+          student: { select: { name: true, rollNo: true, email: true } }
+        },
       },
       _count: { select: { submissions: true } },
     },

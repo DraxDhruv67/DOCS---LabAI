@@ -65,6 +65,7 @@ export default function AdminDashboard() {
   // Modals state
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState<any>(null);
+  const [editingHierarchy, setEditingHierarchy] = useState<{type: string, entity: any} | null>(null);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [showRubricModal, setShowRubricModal] = useState(false);
   const [showTimetableModal, setShowTimetableModal] = useState(false);
@@ -197,6 +198,26 @@ export default function AdminDashboard() {
     fetch('/api/analytics?type=summary')
       .then((res) => res.json())
       .then((d) => setAnalytics(d.stats || null));
+  };
+
+  const handleEditEntity = (type: string, entity: any) => { setEditingHierarchy({ type, entity }); };
+
+  const handleSaveHierarchy = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingHierarchy) return;
+    const { type, entity } = editingHierarchy;
+    const payload: any = { id: entity.id, name: entity.name };
+    if (type === 'departments') payload.code = entity.code;
+    if (type === 'study-years') { payload.academicSessionId = entity.academicSessionId; payload.departmentId = entity.departmentId; }
+    if (type === 'divisions') { payload.studyYearId = entity.studyYearId; }
+    if (type === 'batches') { payload.divisionId = entity.divisionId; }
+    await fetch(`/api/admin/${type}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    setEditingHierarchy(null);
+    loadAllData();
   };
 
   const handleCreateSession = async (e: React.FormEvent) => {
@@ -534,9 +555,12 @@ export default function AdminDashboard() {
                             <p className="text-xs text-gray-500">Department Code: {dept.code}</p>
                           </div>
                         </div>
-                        <span className="px-3 py-1 bg-gray-100 border border-gray-200 rounded-full text-xs font-medium text-gray-700">
-                          {dept.subjects?.length || 0} Courses Configured
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="px-3 py-1 bg-gray-100 border border-gray-200 rounded-full text-xs font-medium text-gray-700">
+                            {dept.subjects?.length || 0} Courses Configured
+                          </span>
+                          <button onClick={() => handleEditEntity('departments', dept)} className="p-1.5 text-gray-400 hover:text-blue-600 bg-white border border-gray-200 rounded-lg shadow-sm cursor-pointer" title="Edit Department"><Edit className="w-3.5 h-3.5" /></button>
+                        </div>
                       </div>
 
                       {/* Study Years Grid */}
@@ -549,9 +573,12 @@ export default function AdminDashboard() {
                           uniqueClasses.map((sy: any) => (
                             <div key={sy.id} className="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-4">
                               <div className="flex items-center justify-between">
-                                <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-xs rounded-md">
-                                  Class: {sy.name}
-                                </span>
+                                <div className="flex items-center gap-2">
+                                  <span className="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold text-xs rounded-md">
+                                    Class: {sy.name}
+                                  </span>
+                                  <button onClick={() => handleEditEntity('study-years', sy)} className="p-1 text-gray-400 hover:text-blue-600 cursor-pointer"><Edit className="w-3.5 h-3.5" /></button>
+                                </div>
                                 <span className="text-[11px] text-gray-500">
                                   {sy.divisions?.length || 0} Divisions
                                 </span>
@@ -561,13 +588,17 @@ export default function AdminDashboard() {
                                 {(sy.divisions || []).map((div: any) => (
                                   <div key={div.id} className="bg-white border border-gray-200 rounded-lg p-3 space-y-2">
                                     <div className="flex items-center justify-between text-xs font-semibold text-gray-800">
-                                      <span>{div.name}</span>
+                                      <div className="flex items-center gap-1.5">
+                                        <span>{div.name}</span>
+                                        <button onClick={() => handleEditEntity('divisions', div)} className="text-gray-300 hover:text-blue-600 cursor-pointer"><Edit className="w-3 h-3" /></button>
+                                      </div>
                                       <span className="text-[10px] text-gray-500">{div.batches?.length || 0} Batches</span>
                                     </div>
                                     <div className="flex flex-wrap gap-1.5 pt-1">
                                       {(div.batches || []).map((batch: any) => (
-                                        <span key={batch.id} className="px-2.5 py-1 bg-gray-100 border border-gray-200 text-gray-700 text-[11px] font-medium rounded-md">
+                                        <span key={batch.id} className="group px-2.5 py-1 bg-gray-100 border border-gray-200 text-gray-700 text-[11px] font-medium rounded-md flex items-center gap-1">
                                           {batch.name}
+                                          <button onClick={() => handleEditEntity('batches', batch)} className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-blue-600 ml-1 cursor-pointer"><Edit className="w-3 h-3" /></button>
                                         </span>
                                       ))}
                                     </div>
@@ -1045,6 +1076,65 @@ export default function AdminDashboard() {
           </div>
         )}
 
+      {/* EDIT HIERARCHY MODAL */}
+      {editingHierarchy && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-2xl">
+            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">
+              Edit {editingHierarchy.type.replace('-', ' ')}
+            </h3>
+            <form onSubmit={handleSaveHierarchy} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-gray-500 mb-1">Name</label>
+                <input type="text" required value={editingHierarchy.entity.name} onChange={(e) => setEditingHierarchy({...editingHierarchy, entity: {...editingHierarchy.entity, name: e.target.value}})} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl" />
+              </div>
+              {editingHierarchy.type === 'departments' && (
+                <div>
+                  <label className="block text-gray-500 mb-1">Code</label>
+                  <input type="text" required value={editingHierarchy.entity.code} onChange={(e) => setEditingHierarchy({...editingHierarchy, entity: {...editingHierarchy.entity, code: e.target.value}})} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl" />
+                </div>
+              )}
+              {editingHierarchy.type === 'study-years' && (
+                <>
+                  <div>
+                    <label className="block text-gray-500 mb-1">Academic Session</label>
+                    <select value={editingHierarchy.entity.academicSessionId} onChange={(e) => setEditingHierarchy({...editingHierarchy, entity: {...editingHierarchy.entity, academicSessionId: e.target.value}})} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl">
+                      {sessions.map((s: any) => <option key={s.id} value={s.id}>{s.yearRange}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 mb-1">Department</label>
+                    <select value={editingHierarchy.entity.departmentId} onChange={(e) => setEditingHierarchy({...editingHierarchy, entity: {...editingHierarchy.entity, departmentId: e.target.value}})} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl">
+                      {departments.map((d: any) => <option key={d.id} value={d.id}>{d.name}</option>)}
+                    </select>
+                  </div>
+                </>
+              )}
+              {editingHierarchy.type === 'divisions' && (
+                <div>
+                  <label className="block text-gray-500 mb-1">Study Year</label>
+                  <select value={editingHierarchy.entity.studyYearId} onChange={(e) => setEditingHierarchy({...editingHierarchy, entity: {...editingHierarchy.entity, studyYearId: e.target.value}})} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl">
+                    {departments.flatMap((d: any) => d.studyYears || []).map((sy: any) => <option key={sy.id} value={sy.id}>{sy.name} ({sy.department?.code || ''})</option>)}
+                  </select>
+                </div>
+              )}
+              {editingHierarchy.type === 'batches' && (
+                <div>
+                  <label className="block text-gray-500 mb-1">Division</label>
+                  <select value={editingHierarchy.entity.divisionId} onChange={(e) => setEditingHierarchy({...editingHierarchy, entity: {...editingHierarchy.entity, divisionId: e.target.value}})} className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl">
+                    {departments.flatMap((d: any) => d.studyYears || []).flatMap((sy: any) => sy.divisions || []).map((div: any) => <option key={div.id} value={div.id}>{div.name} ({div.studyYear?.name || ''})</option>)}
+                  </select>
+                </div>
+              )}
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                <button type="button" onClick={() => setEditingHierarchy(null)} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl cursor-pointer">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-blue-600 text-gray-900 font-bold rounded-xl cursor-pointer">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* UNIFIED CONFIGURE ACADEMIC HIERARCHY MODAL */}
       {showConfigModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -1082,14 +1172,23 @@ export default function AdminDashboard() {
               <form onSubmit={handleCreateSession} className="space-y-4 text-xs">
                 <div>
                   <label className="block text-gray-500 mb-1">Academic Session Year Range</label>
-                  <input
-                    type="text"
+                  <select
                     required
                     value={newSessionRange}
                     onChange={(e) => setNewSessionRange(e.target.value)}
-                    placeholder="e.g. 2026-2027"
                     className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
-                  />
+                  >
+                    <option value="" disabled>Select Year Range</option>
+                    <option value="2021-2022">2021-2022</option>
+                    <option value="2022-2023">2022-2023</option>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2024-2025">2024-2025</option>
+                    <option value="2025-2026">2025-2026</option>
+                    <option value="2026-2027">2026-2027</option>
+                    <option value="2027-2028">2027-2028</option>
+                    <option value="2028-2029">2028-2029</option>
+                    <option value="2029-2030">2029-2030</option>
+                  </select>
                 </div>
                 <button type="submit" className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-gray-900 font-semibold rounded-xl shadow-md cursor-pointer">
                   Save Academic Session

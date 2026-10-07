@@ -38,3 +38,24 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ rubric });
 }
+
+export async function PUT(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'ADMIN') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { id, title, maxMarks, criteria } = await request.json();
+  if (!id || !title || !maxMarks || !Array.isArray(criteria)) return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+  const rubric = await prisma.rubric.update({
+    where: { id },
+    data: { title: title.trim(), maxMarks: parseFloat(maxMarks), criteriaJson: JSON.stringify(criteria) },
+  });
+  return NextResponse.json({ rubric });
+}
+
+export async function DELETE(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'ADMIN') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const id = new URL(request.url).searchParams.get('id');
+  if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+  await prisma.rubric.delete({ where: { id } });
+  return NextResponse.json({ success: true });
+}
