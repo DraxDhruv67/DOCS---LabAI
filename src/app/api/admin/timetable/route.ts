@@ -57,12 +57,34 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Missing required timetable slot parameters' }, { status: 400 });
   }
 
+  let finalDeptId = departmentId;
+  let finalStudyYearId = studyYearId;
+  let finalDivisionId = divisionId;
+
+  if (!finalDeptId || !finalStudyYearId || !finalDivisionId) {
+    const batchInfo = await prisma.batch.findUnique({
+      where: { id: batchId },
+      include: {
+        division: {
+          include: {
+            studyYear: true
+          }
+        }
+      }
+    });
+    if (batchInfo) {
+      finalDivisionId = batchInfo.divisionId;
+      finalStudyYearId = batchInfo.division.studyYearId;
+      finalDeptId = batchInfo.division.studyYear.departmentId;
+    }
+  }
+
   const slot = await prisma.timetableSlot.create({
     data: {
       academicSessionId,
-      departmentId,
-      studyYearId,
-      divisionId,
+      departmentId: finalDeptId,
+      studyYearId: finalStudyYearId,
+      divisionId: finalDivisionId,
       batchId,
       subjectId,
       facultyId,

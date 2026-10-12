@@ -13,16 +13,32 @@ interface TimetableSlot {
 
 export default function TimetableMonthView({ slots, userName }: { slots: TimetableSlot[], userName: string }) {
   const [selectedSlot, setSelectedSlot] = useState<TimetableSlot | null>(null);
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+
+  // Calculate days in the current month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
   
-  // A simplistic calendar generator for October 2026 (starts on Thursday, 31 days)
-  const daysInMonth = 31;
-  const startOffset = 3; // 0=Mon, 1=Tue, 2=Wed, 3=Thu (Oct 1, 2026 is Thursday)
+  // Calculate start offset (0=Mon, 1=Tue, ..., 6=Sun)
+  // getDay() returns 0 for Sunday, 1 for Monday, etc.
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+  const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
   
-  const calendarCells = Array.from({ length: 35 }).map((_, i) => {
+  const totalCells = Math.ceil((daysInMonth + startOffset) / 7) * 7;
+
+  const calendarCells = Array.from({ length: totalCells }).map((_, i) => {
     const date = i - startOffset + 1;
     if (date < 1 || date > daysInMonth) return null;
     return date;
   });
+
+  const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
+  const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
+  const goToToday = () => setCurrentDate(new Date());
+
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   const getDayName = (index: number) => {
     const days = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
@@ -46,7 +62,7 @@ export default function TimetableMonthView({ slots, userName }: { slots: Timetab
       {/* Smartboard Header Mimic */}
       <div className="flex flex-col md:flex-row items-center justify-between bg-[#f0f2f5] pb-4 px-2">
         <div className="flex items-center gap-4">
-          <h2 className="text-xl font-bold text-gray-800">October 2026</h2>
+          <h2 className="text-xl font-bold text-gray-800">{monthNames[month]} {year}</h2>
           <span className="text-xs text-gray-500 hidden sm:inline-block">Select session/day or duration (month/week/day)</span>
         </div>
 
@@ -62,9 +78,9 @@ export default function TimetableMonthView({ slots, userName }: { slots: Timetab
           </div>
 
           <div className="flex items-center text-gray-600 gap-2">
-            <button className="p-1 hover:bg-gray-200 rounded-full"><ChevronLeft className="w-5 h-5" /></button>
-            <span className="font-semibold text-sm">Today</span>
-            <button className="p-1 hover:bg-gray-200 rounded-full"><ChevronRight className="w-5 h-5" /></button>
+            <button onClick={prevMonth} className="p-1 hover:bg-gray-200 rounded-full cursor-pointer"><ChevronLeft className="w-5 h-5" /></button>
+            <span onClick={goToToday} className="font-semibold text-sm cursor-pointer hover:underline">Today</span>
+            <button onClick={nextMonth} className="p-1 hover:bg-gray-200 rounded-full cursor-pointer"><ChevronRight className="w-5 h-5" /></button>
           </div>
         </div>
       </div>
@@ -87,7 +103,7 @@ export default function TimetableMonthView({ slots, userName }: { slots: Timetab
               const dayName = getDayName(index);
               // Find slots for this day of week that match active filters
               const daySlots = slots.filter(s => s.dayOfWeek.toUpperCase() === dayName && activeFilters.includes(s.subject?.name || ''));
-              const isToday = date === 5; // Highlight the 5th based on the reference image
+              const isToday = date === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear();
 
               return (
                 <div key={index} className={`min-h-[100px] border-b border-r border-gray-100 p-1 flex flex-col ${isToday ? 'bg-blue-50/30' : ''}`}>
