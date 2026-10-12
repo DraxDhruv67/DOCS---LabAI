@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { executeCode } from '@/lib/executionEngine';
+import { executionQueue } from '@/lib/executionQueue';
 import { rateLimit } from '@/lib/rateLimit';
 
 export async function GET(request: Request) {
@@ -66,8 +66,8 @@ export async function POST(request: Request) {
 
   const attemptNumber = previousAttemptCount + 1;
 
-  // Execute code via execution engine
-  const execResult = await executeCode(code, language, question.testCases);
+  // Execute code via managed concurrency queue
+  const execResult = await executionQueue.enqueue(code, language, question.testCases);
 
   // Store attempt in database without overwriting previous attempts
   const attempt = await prisma.attempt.create({

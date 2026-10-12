@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 import { getCurrentUser } from '@/lib/auth';
+import { uploadFile } from '@/lib/storage';
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
@@ -20,23 +19,9 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // SECURITY FIX FOR PRIORITY 2: Store files outside /public in protected storage/uploads
-    const storageDir = path.join(process.cwd(), 'storage', 'uploads');
-    if (!fs.existsSync(storageDir)) {
-      fs.mkdirSync(storageDir, { recursive: true });
-    }
+    const result = await uploadFile(buffer, file.name, file.type);
 
-    const uniqueFilename = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const filePath = path.join(storageDir, uniqueFilename);
-    fs.writeFileSync(filePath, buffer);
-
-    const fileUrl = `/api/uploads/${uniqueFilename}`;
-
-    return NextResponse.json({
-      fileUrl,
-      fileName: file.name,
-      fileSize: file.size,
-    });
+    return NextResponse.json(result);
   } catch (error: any) {
     console.error('File upload error:', error);
     return NextResponse.json({ error: 'File upload failed' }, { status: 500 });
