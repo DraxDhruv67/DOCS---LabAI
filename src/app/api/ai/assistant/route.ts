@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import { getCurrentUser } from '@/lib/auth';
 
 export async function POST(request: Request) {
@@ -18,41 +18,43 @@ export async function POST(request: Request) {
 
   if (apiKey) {
     try {
-      const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+      const ai = new GoogleGenAI({ apiKey });
 
-      const fullPrompt = `You are DOCS AI, an expert academic coding & computer science assistant for university students.
+      const systemInstruction = `You are DOCS AI, an expert academic coding & computer science assistant for university students.
 Subject context: ${subjectName || 'Computer Science Laboratory'}
 Current student code (if any):
 \`\`\`
 ${contextCode || 'No code provided'}
 \`\`\`
 
-Student Question:
-${prompt}
+Provide a concise, highly educational response, explaining relevant data structures, algorithm complexity, logic fixes, or conceptual explanations cleanly in Markdown. Do NOT give complete assignment solution writeups directly if it bypasses practical learning; guide them step-by-step to find the answer.`;
 
-Provide a concise, highly educational response, explaining relevant data structures, algorithm complexity, logic fixes, or conceptual explanations cleanly in Markdown. Do not give complete assignment solution writeups directly if it bypasses practical learning, but guide step-by-step.`;
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          systemInstruction,
+          temperature: 0.7,
+        }
+      });
 
-      const result = await model.generateContent(fullPrompt);
-      const responseText = result.response.text();
-
-      return NextResponse.json({ response: responseText });
+      return NextResponse.json({ response: response.text });
     } catch (err: any) {
       console.error('Gemini API call failed, using deterministic fallback:', err);
     }
   }
 
   // Deterministic Fallback response for offline / unconfigured API key
-  let fallbackText = `### 🤖 DOCS AI Assistant
+  let fallbackText = `### ✨ DOCS AI Assistant (Offline Mode)
 
 **Question**: "${prompt}"
 
-**Academic Guidance & Explanation**:
-- **Data Structures**: Consider using appropriate containers (Arrays, HashMaps, or Vectors) to reduce time complexity to $O(N)$.
-- **Code Optimization**: Ensure all loop bounds check edge cases like empty inputs or negative values.
-- **Test Verification**: Verify input line reading with \`sys.stdin.read()\` (Python) or \`cin / Scanner\` (C++/Java).
+**Academic Guidance**:
+- **Algorithms**: Consider if sorting or using a HashMap might optimize your approach.
+- **Edge Cases**: Make sure to test for empty inputs, negative numbers, or array bounds limits.
+- **Syntax**: Verify semicolons, indentation, and correct library imports.
 
-*Tip: Connect your Gemini API Key in \`.env\` for real-time model responses!*`;
+*(Admin Note: Configure \`GEMINI_API_KEY\` in your \`.env\` file to activate real-time LLM inference!)*`;
 
   return NextResponse.json({ response: fallbackText });
 }

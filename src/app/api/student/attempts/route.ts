@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import { executeCode } from '@/lib/executionEngine';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function GET(request: Request) {
   const user = await getCurrentUser();
@@ -30,6 +31,12 @@ export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user || user.role !== 'STUDENT') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Rate limit: 10 execution requests per minute per user
+  const limitStatus = rateLimit(`exec_${user.id}`, 10, 60000);
+  if (!limitStatus.success) {
+    return NextResponse.json({ error: 'Rate limit exceeded. Please wait before submitting code again.' }, { status: 429 });
   }
 
   const { sessionId, questionId, code, language } = await request.json();

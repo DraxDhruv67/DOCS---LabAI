@@ -3,13 +3,13 @@ import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const adminUser = await getCurrentUser();
   if (!adminUser || adminUser.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id } = params;
+  const { id } = await params;
   const { name, email, password, role, rollNo, employeeId, departmentId, batchId } = await request.json();
 
   const existing = await prisma.user.findUnique({ where: { id } });
@@ -49,13 +49,13 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   return NextResponse.json({ user: updatedUser });
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const adminUser = await getCurrentUser();
   if (!adminUser || adminUser.role !== 'ADMIN') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   const existing = await prisma.user.findUnique({ where: { id } });
   if (!existing) {

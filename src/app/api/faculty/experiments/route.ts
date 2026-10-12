@@ -74,3 +74,29 @@ export async function POST(request: Request) {
 
   return NextResponse.json({ experiment });
 }
+
+export async function PUT(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'FACULTY') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const { id, experimentNo, title, description } = await request.json();
+  if (!id) return NextResponse.json({ error: 'Experiment ID is required' }, { status: 400 });
+
+  const experiment = await prisma.experiment.update({
+    where: { id },
+    data: {
+      ...(experimentNo !== undefined && { experimentNo: parseInt(experimentNo, 10) }),
+      ...(title !== undefined && { title: title.trim() }),
+      ...(description !== undefined && { description: description.trim() }),
+    },
+  });
+  return NextResponse.json({ experiment });
+}
+
+export async function DELETE(request: Request) {
+  const user = await getCurrentUser();
+  if (!user || user.role !== 'FACULTY') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const id = new URL(request.url).searchParams.get('id');
+  if (!id) return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+  await prisma.experiment.delete({ where: { id } });
+  return NextResponse.json({ success: true });
+}
