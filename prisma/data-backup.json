@@ -1,0 +1,1400 @@
+{
+  "academicSessions": [
+    {
+      "id": "973c77a8-c451-47e1-8b0e-76cc922d2c33",
+      "yearRange": "2026-2027",
+      "isCurrent": false,
+      "createdAt": "2026-08-29T16:04:24.119Z"
+    },
+    {
+      "id": "089ebb46-70ec-4bc2-aa80-006cbe0c3e2d",
+      "yearRange": "2027-2028_1788019489558",
+      "isCurrent": false,
+      "createdAt": "2026-08-29T16:04:49.560Z"
+    }
+  ],
+  "departments": [
+    {
+      "id": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "code": "CSE-DS",
+      "name": "Computer Science & Engineering (Data Science)",
+      "createdAt": "2026-08-29T16:04:24.134Z"
+    },
+    {
+      "id": "a9c58b83-de1b-42c4-b422-9637cbe95ebd",
+      "code": "CSE",
+      "name": "DS",
+      "createdAt": "2026-09-30T06:21:13.851Z"
+    }
+  ],
+  "studyYears": [
+    {
+      "id": "b5854a8e-816a-4a26-99cd-401edcd1e7e1",
+      "name": "SY",
+      "academicSessionId": "973c77a8-c451-47e1-8b0e-76cc922d2c33",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "createdAt": "2026-08-29T16:04:24.143Z"
+    },
+    {
+      "id": "071c85b4-127b-478d-9c76-e7acf00e687a",
+      "name": "TY",
+      "academicSessionId": "973c77a8-c451-47e1-8b0e-76cc922d2c33",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "createdAt": "2026-08-29T16:04:24.155Z"
+    },
+    {
+      "id": "ef18d98e-b2d8-4dec-8f2b-0d3fe6c13bad",
+      "name": "SY",
+      "academicSessionId": "089ebb46-70ec-4bc2-aa80-006cbe0c3e2d",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "createdAt": "2026-08-29T16:04:49.571Z"
+    },
+    {
+      "id": "4effae37-8214-4607-930e-7465ade1bf4c",
+      "name": "TY",
+      "academicSessionId": "089ebb46-70ec-4bc2-aa80-006cbe0c3e2d",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "createdAt": "2026-09-30T06:20:10.296Z"
+    }
+  ],
+  "divisions": [
+    {
+      "id": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "name": "Division D",
+      "studyYearId": "b5854a8e-816a-4a26-99cd-401edcd1e7e1",
+      "createdAt": "2026-08-29T16:04:24.166Z"
+    },
+    {
+      "id": "ecde984d-9a74-401f-8c3b-fae3ca65bcf2",
+      "name": "Division D",
+      "studyYearId": "ef18d98e-b2d8-4dec-8f2b-0d3fe6c13bad",
+      "createdAt": "2026-08-29T16:04:49.583Z"
+    }
+  ],
+  "batches": [
+    {
+      "id": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "name": "Batch 1",
+      "divisionId": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "createdAt": "2026-08-29T16:04:24.193Z"
+    },
+    {
+      "id": "cc7747e3-3d2b-4a58-9e32-fcebc0b47f0f",
+      "name": "Batch 2",
+      "divisionId": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "createdAt": "2026-08-29T16:04:24.205Z"
+    },
+    {
+      "id": "04c9d75d-5c5c-467b-a914-90ddd33c59c1",
+      "name": "Batch 1",
+      "divisionId": "ecde984d-9a74-401f-8c3b-fae3ca65bcf2",
+      "createdAt": "2026-08-29T16:04:49.596Z"
+    },
+    {
+      "id": "98836ce9-c3ca-4867-a325-f4a8a9787cc0",
+      "name": "Batch A1",
+      "divisionId": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "createdAt": "2026-09-30T06:20:35.355Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "444865cf-93ac-47cd-b06c-6498282eb2b0",
+      "email": "admin@docs.edu",
+      "passwordHash": "$2a$10$BVYayVz4Y367mn/SPjwtEOp/UEptBotXRaF14jOgCoCRFRjOwY9Le",
+      "role": "ADMIN",
+      "name": "System Admin",
+      "rollNo": null,
+      "employeeId": null,
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "batchId": null,
+      "createdAt": "2026-08-29T16:04:24.627Z",
+      "updatedAt": "2026-08-29T16:04:24.627Z"
+    },
+    {
+      "id": "ab5ef8bf-31db-44ee-bc8f-292ddc4095fa",
+      "email": "faculty@docs.edu",
+      "passwordHash": "$2a$10$G4oBSeHyaKm8ju.ikweLAOGDd7.gNKdEypFv8zxjwk4ZnLHnDv95e",
+      "role": "FACULTY",
+      "name": "Prof. Ananya Sharma",
+      "rollNo": null,
+      "employeeId": "FAC-101",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "batchId": null,
+      "createdAt": "2026-08-29T16:04:24.638Z",
+      "updatedAt": "2026-08-29T16:04:24.638Z"
+    },
+    {
+      "id": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "email": "student@docs.edu",
+      "passwordHash": "$2a$10$G9kcjUUXq8IOiij3tUqSI.fkcQk.PxI1kofPmWH1oG53yFtwiO.F6",
+      "role": "STUDENT",
+      "name": "Rohan V. Mehta",
+      "rollNo": "21DS05",
+      "employeeId": null,
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "createdAt": "2026-08-29T16:04:24.652Z",
+      "updatedAt": "2026-08-29T16:04:24.652Z"
+    },
+    {
+      "id": "2e23306d-25f9-4aa2-9d6d-dd5f49e0afef",
+      "email": "profb_1788019489878@docs.edu",
+      "passwordHash": "$2a$10$b.7aPXIxpZbzzqPCzgMoZOkPz8vKRxUKcn7w1Gf0ZnhbDj2QuhZgK",
+      "role": "FACULTY",
+      "name": "Prof B (Neural Networks)",
+      "rollNo": null,
+      "employeeId": "FAC102",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "batchId": null,
+      "createdAt": "2026-08-29T16:04:49.879Z",
+      "updatedAt": "2026-09-30T01:56:43.544Z"
+    },
+    {
+      "id": "82b44a03-4a07-404c-bafe-5e951c2583e8",
+      "email": "student2_1788019490165@docs.edu",
+      "passwordHash": "$2a$10$0AS7vJO9rXz502KEy/CS6uDQN/JF0kUour/Vj0Yd8cDvpoYXCmxL.",
+      "role": "STUDENT",
+      "name": "Grace Hopper",
+      "rollNo": "21DS02",
+      "employeeId": null,
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "createdAt": "2026-08-29T16:04:50.167Z",
+      "updatedAt": "2026-08-29T16:04:50.167Z"
+    },
+    {
+      "id": "8e0720a9-5dcc-4c5b-b670-2e89659e5438",
+      "email": "humangasor@ben10.edu.in",
+      "passwordHash": "$2a$10$NnIZxzvo6lsAnsN3bqrbuePjlF2v0pmhq4qWG3mJGj4Pj/ahHuBgS",
+      "role": "FACULTY",
+      "name": "Prof. Ben Tennison",
+      "rollNo": "26DS10",
+      "employeeId": "DS-101",
+      "departmentId": "a9c58b83-de1b-42c4-b422-9637cbe95ebd",
+      "batchId": null,
+      "createdAt": "2026-09-30T06:24:27.426Z",
+      "updatedAt": "2026-09-30T06:24:27.426Z"
+    },
+    {
+      "id": "f4bad8ef-881d-459b-b9bc-8d0d202c3f5a",
+      "email": "dora@doratheexplorer.edu.in",
+      "passwordHash": "$2a$10$osEdG2TDFLsFLoJF/3WLLe04Bk0MmYU2ET828ZRMAmTmu0yf7I6Qe",
+      "role": "STUDENT",
+      "name": "Dora",
+      "rollNo": "26DS108",
+      "employeeId": null,
+      "departmentId": "a9c58b83-de1b-42c4-b422-9637cbe95ebd",
+      "batchId": "98836ce9-c3ca-4867-a325-f4a8a9787cc0",
+      "createdAt": "2026-09-30T06:25:45.748Z",
+      "updatedAt": "2026-09-30T06:25:45.748Z"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "55b6547d-c062-4a82-aaee-e9dd695c6f83",
+      "title": "Standard Practical Evaluation Rubric",
+      "maxMarks": 10,
+      "criteriaJson": "[{\"category\":\"Program Logic & Code Structure\",\"marks\":5},{\"category\":\"Test Case Output Accuracy\",\"marks\":3},{\"category\":\"Viva Voce & Understanding\",\"marks\":2}]",
+      "createdAt": "2026-08-29T16:04:24.694Z"
+    },
+    {
+      "id": "2c0dff69-e5c7-4fe0-a87a-e00877768a61",
+      "title": "Custom AI Practical Rubric",
+      "maxMarks": 10,
+      "criteriaJson": "[{\"category\":\"Algorithm Design\",\"marks\":4},{\"category\":\"Execution Speed\",\"marks\":3},{\"category\":\"Viva Defense\",\"marks\":3}]",
+      "createdAt": "2026-08-29T16:04:50.020Z"
+    },
+    {
+      "id": "16508554-539b-4b49-a82c-2a52cc70aad3",
+      "title": "ml",
+      "maxMarks": 10,
+      "criteriaJson": "[{\"category\":\"Program Logic & Code Structure\",\"marks\":5},{\"category\":\"Test Case Output Accuracy\",\"marks\":3},{\"category\":\"Viva Voce & Understanding\",\"marks\":2}]",
+      "createdAt": "2026-09-30T06:29:13.125Z"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "code": "ML201",
+      "name": "Machine Learning",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "studyYearId": "b5854a8e-816a-4a26-99cd-401edcd1e7e1",
+      "rubricId": "55b6547d-c062-4a82-aaee-e9dd695c6f83",
+      "createdAt": "2026-08-29T16:04:24.709Z"
+    }
+  ],
+  "subjectFacultyBatches": [
+    {
+      "id": "16fa9f1f-7fa3-4bd4-b38c-bee4c8592e3a",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "facultyId": "ab5ef8bf-31db-44ee-bc8f-292ddc4095fa",
+      "createdAt": "2026-08-29T16:04:24.723Z"
+    },
+    {
+      "id": "b992cc0c-823a-4f0b-b98c-94819a051bc4",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "facultyId": "2e23306d-25f9-4aa2-9d6d-dd5f49e0afef",
+      "createdAt": "2026-09-30T01:56:57.562Z"
+    },
+    {
+      "id": "0c6657eb-04a0-4666-ac7e-2234cf4ac930",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "batchId": "98836ce9-c3ca-4867-a325-f4a8a9787cc0",
+      "facultyId": "8e0720a9-5dcc-4c5b-b670-2e89659e5438",
+      "createdAt": "2026-09-30T06:27:26.563Z"
+    }
+  ],
+  "experiments": [
+    {
+      "id": "76eafcb4-4f86-4b3a-ad77-e1e7092e1723",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "experimentNo": 1,
+      "title": "Experiment 1: Mean Squared Error (MSE) Calculation",
+      "description": "Implement a function to calculate the Mean Squared Error between true and predicted values.",
+      "labManualUrl": null,
+      "createdAt": "2026-08-29T16:04:24.736Z"
+    },
+    {
+      "id": "cf9b0b84-15fb-4c5e-9e86-b7516a4eba6b",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "experimentNo": 2,
+      "title": "Experiment 2: Single Variable Linear Regression Gradient Descent",
+      "description": "Implement weight updates for single-variable linear regression.",
+      "labManualUrl": null,
+      "createdAt": "2026-08-29T16:04:24.771Z"
+    },
+    {
+      "id": "ca261ce6-227e-4501-9951-1e104b86a60c",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "experimentNo": 3,
+      "title": "hello world",
+      "description": "to print hello world",
+      "labManualUrl": null,
+      "createdAt": "2026-10-01T08:52:25.333Z"
+    },
+    {
+      "id": "57f10f26-2da0-4b73-813c-c2d48ca1395b",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "experimentNo": 4,
+      "title": "matrix",
+      "description": "",
+      "labManualUrl": null,
+      "createdAt": "2026-10-12T07:24:34.342Z"
+    }
+  ],
+  "practicalQuestions": [
+    {
+      "id": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "experimentId": "76eafcb4-4f86-4b3a-ad77-e1e7092e1723",
+      "title": "Calculate Mean Squared Error",
+      "description": "Write a program that accepts space-separated numbers and computes the MSE.",
+      "difficulty": "EASY",
+      "allowedLanguagesJson": "[\"python\",\"cpp\",\"c\",\"java\"]",
+      "defaultCodeJson": null,
+      "marks": 10,
+      "createdAt": "2026-08-29T16:04:24.785Z"
+    },
+    {
+      "id": "75653f9a-12ea-4130-a2af-960c49786411",
+      "experimentId": "ca261ce6-227e-4501-9951-1e104b86a60c",
+      "title": "hello world",
+      "description": "to print hello world",
+      "difficulty": "EASY",
+      "allowedLanguagesJson": "[\"python\",\"cpp\",\"c\",\"java\"]",
+      "defaultCodeJson": null,
+      "marks": 10,
+      "createdAt": "2026-10-01T08:52:25.352Z"
+    },
+    {
+      "id": "73579a39-1998-455b-bb9b-ce25ccb356c4",
+      "experimentId": "ca261ce6-227e-4501-9951-1e104b86a60c",
+      "title": "HELLO DYP",
+      "description": "to print hello dyp",
+      "difficulty": "EASY",
+      "allowedLanguagesJson": "[\"python\",\"cpp\",\"c\",\"java\"]",
+      "defaultCodeJson": null,
+      "marks": 10,
+      "createdAt": "2026-10-01T09:26:43.118Z"
+    },
+    {
+      "id": "f4fca2f1-e580-4438-b9ad-da0d395044ff",
+      "experimentId": "57f10f26-2da0-4b73-813c-c2d48ca1395b",
+      "title": "Implement matrix",
+      "description": "Write a solution for matrix.",
+      "difficulty": "MEDIUM",
+      "allowedLanguagesJson": "[\"python\",\"cpp\",\"c\",\"java\"]",
+      "defaultCodeJson": null,
+      "marks": 10,
+      "createdAt": "2026-10-12T07:24:34.369Z"
+    }
+  ],
+  "testCases": [
+    {
+      "id": "2d69483b-73f6-4f05-bab5-5cd9b91aedff",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "input": "1.0 2.0 3.0",
+      "expectedOutput": "1.0 2.0 3.0",
+      "isHidden": false
+    },
+    {
+      "id": "ebbc6d1f-fdc1-4683-b198-30c5e5db1828",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "input": "hello world",
+      "expectedOutput": "hello world",
+      "isHidden": false
+    },
+    {
+      "id": "c6fba30c-beab-4370-b3b4-7c1b6815bd12",
+      "questionId": "73579a39-1998-455b-bb9b-ce25ccb356c4",
+      "input": "hello dyp",
+      "expectedOutput": "hello dyp",
+      "isHidden": false
+    },
+    {
+      "id": "d3c35cea-7f5f-414d-bf09-90abcb067acb",
+      "questionId": "f4fca2f1-e580-4438-b9ad-da0d395044ff",
+      "input": "1.0 2.0 3.0",
+      "expectedOutput": "1.0 2.0 3.0",
+      "isHidden": false
+    }
+  ],
+  "practicalSessions": [
+    {
+      "id": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "experimentId": "76eafcb4-4f86-4b3a-ad77-e1e7092e1723",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "facultyId": "ab5ef8bf-31db-44ee-bc8f-292ddc4095fa",
+      "startTime": "2026-08-29T15:04:49.937Z",
+      "endTime": "2026-08-29T17:04:49.937Z",
+      "status": "COMPLETED",
+      "isLeaderboardPublished": false,
+      "createdAt": "2026-08-29T16:04:49.943Z"
+    },
+    {
+      "id": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "experimentId": "ca261ce6-227e-4501-9951-1e104b86a60c",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "facultyId": "ab5ef8bf-31db-44ee-bc8f-292ddc4095fa",
+      "startTime": "2026-10-01T08:30:00.000Z",
+      "endTime": "2026-10-01T10:30:00.000Z",
+      "status": "COMPLETED",
+      "isLeaderboardPublished": false,
+      "createdAt": "2026-10-01T09:04:10.978Z"
+    }
+  ],
+  "sessionEntries": [
+    {
+      "id": "9aa1a935-fa2c-4d62-8f0c-0884c0707e9a",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-08-29T16:10:51.385Z"
+    },
+    {
+      "id": "9d82c5e8-0bc4-4313-8592-2f6bec6fcdb2",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-08-29T16:16:58.823Z"
+    },
+    {
+      "id": "b7d302b8-7495-49e4-9dd7-4e8644e3f3e7",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-09-30T05:41:22.772Z"
+    },
+    {
+      "id": "0c9fb180-8179-443b-9d8e-1150b0dc25db",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-09-30T06:07:44.540Z"
+    },
+    {
+      "id": "438c846c-e318-411f-a805-1b80c8f09cea",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-09-30T06:38:51.944Z"
+    },
+    {
+      "id": "ea5936f9-2bcc-4641-a45e-d5e1882f7e72",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-09-30T06:39:15.758Z"
+    },
+    {
+      "id": "efb78737-5f54-45b0-9e37-48a2283698ab",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-09-30T09:28:44.617Z"
+    },
+    {
+      "id": "035b459b-59c0-46e4-9913-4d5b7f272872",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T08:43:26.392Z"
+    },
+    {
+      "id": "ee5193c7-45cc-4af5-b693-2ae70f291bd0",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:04:29.316Z"
+    },
+    {
+      "id": "cc96933f-2181-40f7-80e9-9dfd246569c6",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:06:16.769Z"
+    },
+    {
+      "id": "f2c93584-6e3b-4822-964d-3422f56027ee",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:07:22.483Z"
+    },
+    {
+      "id": "748f9921-54b0-473a-994e-7ddf796df77e",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:17:21.154Z"
+    },
+    {
+      "id": "bc392ad1-33de-4319-bbe9-f53f44153cb6",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:18:39.361Z"
+    },
+    {
+      "id": "5cdf8b50-aeec-4a2b-b0bf-35b018a4c333",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:26:59.779Z"
+    },
+    {
+      "id": "f7a4bc20-ae2f-4b82-b294-60cfa22e6af5",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-01T09:52:41.418Z"
+    },
+    {
+      "id": "de70316b-72bb-4658-8868-fe9c0b4e6918",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-07T07:08:11.200Z"
+    },
+    {
+      "id": "7257c666-ea0a-4c52-8196-4f439985f3cf",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-09T06:07:26.716Z"
+    },
+    {
+      "id": "05ce3bac-9dc3-457f-99ee-b462d5a2a404",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-09T06:07:43.295Z"
+    },
+    {
+      "id": "c7737563-e2c4-4db2-8292-4f7d81345863",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-12T05:28:47.370Z"
+    },
+    {
+      "id": "de4bdc91-58db-4001-99fd-a4ae2ca73fa6",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-12T06:19:57.324Z"
+    },
+    {
+      "id": "f2c1529a-cb17-41da-910b-f07f779783a1",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "joinedAt": "2026-10-12T07:20:44.552Z"
+    }
+  ],
+  "attempts": [
+    {
+      "id": "7e3ae0eb-1f10-4778-ace3-4eded210bbcd",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 1,
+      "code": "def calculate_mse(): return -1",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": null,
+      "memoryUsed": null,
+      "testResultsJson": "[{\"passed\":false}]",
+      "aiSuggestions": null,
+      "score": 0,
+      "createdAt": "2026-08-29T16:04:49.952Z"
+    },
+    {
+      "id": "b302ac4b-6818-47b4-a916-631f78be5769",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 2,
+      "code": "def calculate_mse(): return 0.5",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": null,
+      "memoryUsed": null,
+      "testResultsJson": "[{\"passed\":false}]",
+      "aiSuggestions": null,
+      "score": 5,
+      "createdAt": "2026-08-29T16:04:49.962Z"
+    },
+    {
+      "id": "37c0b830-3ab7-40e6-8f77-b24df1d66ad0",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 3,
+      "code": "def calculate_mse(): return 0.0000",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": null,
+      "memoryUsed": null,
+      "testResultsJson": "[{\"passed\":true}]",
+      "aiSuggestions": null,
+      "score": 10,
+      "createdAt": "2026-08-29T16:04:49.972Z"
+    },
+    {
+      "id": "11c3d799-c330-486b-8bfe-a18bb3824362",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 4,
+      "code": "def solve():\n    try:\n        # Read the first line of space-separated numbers (Actual values)\n        y_true = list(map(float, input().strip().split()))\n        \n        # Read the second line of space-separated numbers (Predicted values)\n        y_pred = list(map(float, input().strip().split()))\n        \n        if len(y_true) == 0 or len(y_true) != len(y_pred):\n            return\n            \n        # Compute the Mean Squared Error\n        mse = sum((actual - predicted) ** 2 for actual, predicted in zip(y_true, y_pred)) / len(y_true)\n        \n        # Print the computed MSE\n        print(mse)\n        \n    except EOFError:\n        pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 420,
+      "memoryUsed": 1699,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-08-29T16:14:45.541Z"
+    },
+    {
+      "id": "49c28a59-f471-419d-813a-dc51fc195977",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 5,
+      "code": "def solve():\n    try:\n        # Read the first line of space-separated numbers (Actual values)\n        y_true = list(map(float, input().strip().split()))\n        \n        # Read the second line of space-separated numbers (Predicted values)\n        y_pred = list(map(float, input().strip().split()))\n        \n        if len(y_true) == 0 or len(y_true) != len(y_pred):\n            return\n            \n        # Compute the Mean Squared Error\n        mse = sum((actual - predicted) ** 2 for actual, predicted in zip(y_true, y_pred)) / len(y_true)\n        \n        # Print the computed MSE\n        print(mse)\n        \n    except EOFError:\n        pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 244,
+      "memoryUsed": 1215,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-08-29T16:15:07.403Z"
+    },
+    {
+      "id": "da4ab2c4-638c-4c61-bd25-4fff40c378f7",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 6,
+      "code": "def solve():\n    try:\n        # Read the single line of input\n        data = input().strip()\n        \n        # Echo the input directly to match the platform's expected output\n        print(data)\n        \n    except EOFError:\n        pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 243,
+      "memoryUsed": 1535,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0 2.0 3.0\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-08-29T16:16:30.521Z"
+    },
+    {
+      "id": "b9159a4c-6ac5-4184-a195-c7598c38fadf",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 7,
+      "code": "def solve():\n    try:\n        # Read the single line of input\n        data = input().strip()\n        \n        # Echo the input directly to match the platform's expected output\n        print(data)\n        \n    except EOFError:\n        pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 173,
+      "memoryUsed": 1506,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0 2.0 3.0\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-08-29T16:16:32.966Z"
+    },
+    {
+      "id": "952acc0c-d589-47a3-adac-9c71f580bf0f",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 8,
+      "code": "def solve():\n    # Write your practical implementation here\n    pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 388,
+      "memoryUsed": 1516,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:41:32.388Z"
+    },
+    {
+      "id": "cf54b921-df84-4701-9e54-4d1daf09b9c7",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 9,
+      "code": "import sys\n\ndef solve():\n    # Read space-separated values from standard input\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    # Parse inputs as floating-point numbers\n    values = [float(x) for x in input_data]\n    \n    # Assuming inputs are provided as pairs (y_true, y_pred)\n    # If inputs are provided as two halves (e.g., actuals then predictions):\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    # Compute Mean Squared Error\n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 215,
+      "memoryUsed": 1562,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:44:42.205Z"
+    },
+    {
+      "id": "e0446be6-2ea0-4073-993f-f3e0207de231",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 10,
+      "code": "import sys\n\ndef solve():\n    # Read space-separated values from standard input\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    # Parse inputs as floating-point numbers\n    values = [float(x) for x in input_data]\n    \n    # Assuming inputs are provided as pairs (y_true, y_pred)\n    # If inputs are provided as two halves (e.g., actuals then predictions):\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    # Compute Mean Squared Error\n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 171,
+      "memoryUsed": 1424,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:44:48.369Z"
+    },
+    {
+      "id": "18b8f907-0f5d-4358-b7a3-9a67c9bb5582",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 11,
+      "code": "import sys\n\ndef solve():\n    # Read space-separated values from standard input\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    # Parse inputs as floating-point numbers\n    values = [float(x) for x in input_data]\n    \n    # Assuming inputs are provided as pairs (y_true, y_pred)\n    # If inputs are provided as two halves (e.g., actuals then predictions):\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    # Compute Mean Squared Error\n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 153,
+      "memoryUsed": 1316,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:44:49.589Z"
+    },
+    {
+      "id": "fc0b7340-6860-4efe-bc7c-d172460cf61b",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 12,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 160,
+      "memoryUsed": 1423,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:44:59.889Z"
+    },
+    {
+      "id": "1192a377-29c1-48d2-9bc1-de71949ddbb9",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 13,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 147,
+      "memoryUsed": 1450,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:45:03.820Z"
+    },
+    {
+      "id": "94eeebca-0b3c-44f5-a99c-8ffd02f80d59",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 14,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 184,
+      "memoryUsed": 1661,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:45:33.640Z"
+    },
+    {
+      "id": "ff0a811a-9d74-4dbc-9b56-874773888ec8",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 15,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 160,
+      "memoryUsed": 1629,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:45:37.399Z"
+    },
+    {
+      "id": "f3797670-c242-4ff2-8500-bb867c0232a5",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 16,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 149,
+      "memoryUsed": 1458,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:45:54.158Z"
+    },
+    {
+      "id": "3fbae50d-b2fd-4efb-b591-b247fd8a3441",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 17,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 145,
+      "memoryUsed": 1513,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:45:57.377Z"
+    },
+    {
+      "id": "c52712c8-5ab2-42a0-bf02-5a4d550464e3",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 18,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    mean_val = sum(values) / len(values)\n    \n    mse = sum((x - mean_val) ** 2 for x in values) / len(values)\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 165,
+      "memoryUsed": 1693,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"0.6666666666666666\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:45:58.404Z"
+    },
+    {
+      "id": "732d45bf-9c2f-40ef-b54d-63fbe09b1f38",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 19,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Check if input contains two paired sets (y_true and y_pred)\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(f\"{mse:.2f}\" if mse.is_integer() else mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 156,
+      "memoryUsed": 1533,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.00\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:46:42.256Z"
+    },
+    {
+      "id": "9f1713f0-a455-4cc4-9a22-b0d563102dd3",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 20,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Check if input contains two paired sets (y_true and y_pred)\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(f\"{mse:.2f}\" if mse.is_integer() else mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 155,
+      "memoryUsed": 1424,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.00\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:46:44.188Z"
+    },
+    {
+      "id": "af76ebe0-cd62-4157-9cbf-6edbe5f0599c",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 21,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Check if input contains two paired sets (y_true and y_pred)\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(f\"{mse:.2f}\" if mse.is_integer() else mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 183,
+      "memoryUsed": 1201,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.00\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:46:44.595Z"
+    },
+    {
+      "id": "f072f5fe-9ef2-4348-b0bc-65287e1d9150",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 22,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Check if input contains two paired sets (y_true and y_pred)\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(f\"{mse:.2f}\" if mse.is_integer() else mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 149,
+      "memoryUsed": 1424,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.00\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:46:48.139Z"
+    },
+    {
+      "id": "0c560c53-7e06-4820-8495-f918437536fb",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 23,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Check if input contains two paired sets (y_true and y_pred)\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(f\"{mse:.2f}\" if mse.is_integer() else mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 174,
+      "memoryUsed": 1537,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.00\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:46:49.443Z"
+    },
+    {
+      "id": "d87caad5-e850-4ade-a5c9-f4a7f294b8ee",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 24,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Check if input contains two paired sets (y_true and y_pred)\n    half = len(values) // 2\n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(f\"{mse:.2f}\" if mse.is_integer() else mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 157,
+      "memoryUsed": 1473,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.00\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:47:06.770Z"
+    },
+    {
+      "id": "1f3b7c4c-32a7-4780-87f0-ab768049266f",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 25,
+      "code": "import sys\n\ndef solve():\n    input_data = sys.stdin.read().split()\n    if not input_data:\n        return\n    \n    values = [float(x) for x in input_data]\n    \n    # Split input into actuals (y) and predictions (y_hat)\n    half = len(values) // 2\n    if half == 0:\n        return\n        \n    actuals = values[:half]\n    predictions = values[half:]\n    \n    mse = sum((act - pred) ** 2 for act, pred in zip(actuals, predictions)) / half\n    print(mse)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 161,
+      "memoryUsed": 1298,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T05:48:16.412Z"
+    },
+    {
+      "id": "ef6b1ea0-8c48-4b6b-b9e0-17879651d0b6",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 26,
+      "code": "def solve():\n    # Write your practical implementation here\n    pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 217,
+      "memoryUsed": 1676,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T06:39:18.975Z"
+    },
+    {
+      "id": "d39436ec-0b92-43a0-82d4-f03cedd8b5c7",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "attemptNumber": 27,
+      "code": "print(\"hello\")\n",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 243,
+      "memoryUsed": 1324,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"hello\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-09-30T09:29:07.459Z"
+    },
+    {
+      "id": "cbbc0dfc-7475-4965-aba8-63c7bea9a4cc",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 1,
+      "code": "import sys\n\ndef solve():\n    # Read input from standard input\n    user_input = sys.stdin.read().strip()\n    \n    # Print the exact input string\n    if user_input:\n        print(user_input)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 239,
+      "memoryUsed": 1614,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0 2.0 3.0\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:08:06.005Z"
+    },
+    {
+      "id": "643238b0-eecf-4e66-801a-69e834724eed",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 2,
+      "code": "import sys\n\ndef solve():\n    # Read input from standard input\n    user_input = sys.stdin.read().strip()\n    \n    # Print the exact input string\n    if user_input:\n        print(user_input)\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 172,
+      "memoryUsed": 1223,
+      "testResultsJson": "[{\"input\":\"1.0 2.0 3.0\",\"expectedOutput\":\"1.0 2.0 3.0\",\"actualOutput\":\"1.0 2.0 3.0\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:08:09.040Z"
+    },
+    {
+      "id": "32b7e952-02e0-4a12-89c6-599e3b4cf176",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 3,
+      "code": "def solve():\n    # Print the string 'hello world'\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 170,
+      "memoryUsed": 1532,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:19:37.695Z"
+    },
+    {
+      "id": "c7ce592d-39b2-4b82-92a3-72876d8a7a2e",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 4,
+      "code": "def solve():\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 145,
+      "memoryUsed": 1306,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:20:08.898Z"
+    },
+    {
+      "id": "84662235-6205-4edf-9e17-f6c8be35637c",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 5,
+      "code": "def solve():\n    print(\"hello dhruv\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "FAILED",
+      "executionTime": 149,
+      "memoryUsed": 1241,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello dhruv\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "💡 Logical mismatch detected: Passed 0/1 test cases. Verify edge case formatting, boundary values, and trailing output newlines.",
+      "score": 0,
+      "createdAt": "2026-10-01T09:20:19.641Z"
+    },
+    {
+      "id": "f53fa5c5-37c7-4fce-9d60-33c64d4938d5",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "73579a39-1998-455b-bb9b-ce25ccb356c4",
+      "attemptNumber": 1,
+      "code": "import sys\n\ndef solve():\n    # Read the input string and print it back\n    user_input = sys.stdin.read().strip()\n    if user_input:\n        print(user_input)\n    else:\n        print(\"hello dyp\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 112,
+      "memoryUsed": 1419,
+      "testResultsJson": "[{\"input\":\"hello dyp\",\"expectedOutput\":\"hello dyp\",\"actualOutput\":\"hello dyp\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:27:42.459Z"
+    },
+    {
+      "id": "9caaf293-6343-435b-8d74-ea93d1167862",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "73579a39-1998-455b-bb9b-ce25ccb356c4",
+      "attemptNumber": 2,
+      "code": "import sys\n\ndef solve():\n    # Read the input string and print it back\n    user_input = sys.stdin.read().strip()\n    if user_input:\n        print(user_input)\n    else:\n        print(\"hello dYp\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 79,
+      "memoryUsed": 1452,
+      "testResultsJson": "[{\"input\":\"hello dyp\",\"expectedOutput\":\"hello dyp\",\"actualOutput\":\"hello dyp\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:27:55.991Z"
+    },
+    {
+      "id": "c8272934-f5be-49a6-9c64-a9f232617b34",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 6,
+      "code": "def solve():\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 205,
+      "memoryUsed": 1694,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:53:19.069Z"
+    },
+    {
+      "id": "1d1bcb27-dfc3-49fd-84f2-2c05f6d5cf33",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 7,
+      "code": "def solve():\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 170,
+      "memoryUsed": 1222,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✅ Excellent execution! Code passed all 1 test cases. Time complexity: O(N), Space complexity: O(1). Keep up the good work!",
+      "score": 10,
+      "createdAt": "2026-10-01T09:53:48.728Z"
+    },
+    {
+      "id": "ffb4abcd-1a96-4b7f-a462-8d9dceffeacb",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 8,
+      "code": "def solve():\n    printt(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "RUNTIME_ERROR",
+      "executionTime": 134,
+      "memoryUsed": 1592,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Traceback (most recent call last):\\r\\n  File \\\"C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\docs-exec-Da2imn\\\\solution.py\\\", line 5, in <module>\\r\\n    solve()\\r\\n  File \\\"C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\docs-exec-Da2imn\\\\solution.py\\\", line 2, in solve\\r\\n    printt(\\\"hello world\\\")\\r\\nNameError: name 'printt' is not defined. Did you mean: 'print'?\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "⚠️ Syntax or Runtime exception occurred during test case execution. Check variable declarations, array indexing, and stdin handling.",
+      "score": 0,
+      "createdAt": "2026-10-01T09:54:07.233Z"
+    },
+    {
+      "id": "2a67c443-7194-4bf9-ab88-ba6a15b9b20f",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 9,
+      "code": "def solve():\n    # Write your practical implementation here\n    pass\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "cpp",
+      "status": "COMPILATION_ERROR",
+      "executionTime": 14,
+      "memoryUsed": 12,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Compilation Failed\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "❌ Compilation failed. Check your syntax, missing semicolons, or library imports.",
+      "score": 0,
+      "createdAt": "2026-10-07T07:09:19.580Z"
+    },
+    {
+      "id": "6294692a-6385-42b9-a6c9-b31b6119ae51",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 10,
+      "code": "def solve():\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "RUNTIME_ERROR",
+      "executionTime": 28,
+      "memoryUsed": 20,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Runtime Execution Error\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "⚠️ Runtime exception occurred. Check for infinite loops, out-of-bounds array access, or unhandled nulls.",
+      "score": 0,
+      "createdAt": "2026-10-09T06:09:05.294Z"
+    },
+    {
+      "id": "c4ac6817-5203-4098-8344-3d58ad253995",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 11,
+      "code": "def solve():\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "RUNTIME_ERROR",
+      "executionTime": 8,
+      "memoryUsed": 46,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Runtime Execution Error\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "⚠️ Runtime exception occurred. Check for infinite loops, out-of-bounds array access, or unhandled nulls.",
+      "score": 0,
+      "createdAt": "2026-10-09T06:09:20.909Z"
+    },
+    {
+      "id": "3b33cacb-04da-4e5c-b8c0-c1d9518a3d9f",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 12,
+      "code": "def solve():\n    # Read the input if needed, or directly print the expected string\n    # Since the input is \"hello world\" and expected is \"hello world\":\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "RUNTIME_ERROR",
+      "executionTime": 5039,
+      "memoryUsed": 56,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Time Limit Exceeded\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "⚠️ Runtime exception occurred. Check for infinite loops, out-of-bounds array access, or unhandled nulls.",
+      "score": 0,
+      "createdAt": "2026-10-12T06:10:05.670Z"
+    },
+    {
+      "id": "4a491738-dbea-4c71-a9b1-5fed0902f74f",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 13,
+      "code": "def solve():\n    # Read the input if needed, or directly print the expected string\n    # Since the input is \"hello world\" and expected is \"hello world\":\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "RUNTIME_ERROR",
+      "executionTime": 5037,
+      "memoryUsed": 39,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Time Limit Exceeded\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "⚠️ Runtime exception occurred. Check for infinite loops, out-of-bounds array access, or unhandled nulls.",
+      "score": 0,
+      "createdAt": "2026-10-12T06:10:20.000Z"
+    },
+    {
+      "id": "d136fd93-0dcf-4835-abdf-0fde54a85987",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 14,
+      "code": "def solve():\n    # Read the input if needed, or directly print the expected string\n    # Since the input is \"hello world\" and expected is \"hello world\":\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "RUNTIME_ERROR",
+      "executionTime": 5031,
+      "memoryUsed": 42,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"Time Limit Exceeded\",\"passed\":false,\"isHidden\":false}]",
+      "aiSuggestions": "⚠️ Runtime exception occurred. Check for infinite loops, out-of-bounds array access, or unhandled nulls.",
+      "score": 0,
+      "createdAt": "2026-10-12T06:20:09.405Z"
+    },
+    {
+      "id": "40ce5ecc-cdf8-4848-93b4-5809f1a9f93f",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 15,
+      "code": "def solve():\n    # Read the input if needed, or directly print the expected string\n    # Since the input is \"hello world\" and expected is \"hello world\":\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 2268,
+      "memoryUsed": 54,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✨ Excellent execution! Code passed all 1 test cases safely inside the isolated container.",
+      "score": 10,
+      "createdAt": "2026-10-12T06:20:16.647Z"
+    },
+    {
+      "id": "471d1061-71f0-4316-bb58-6c2af8f4ae09",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 16,
+      "code": "def solve():\n    # Read the input if needed, or directly print the expected string\n    # Since the input is \"hello world\" and expected is \"hello world\":\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 4858,
+      "memoryUsed": 33,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✨ Excellent execution! Code passed all 1 test cases safely inside the isolated container.",
+      "score": 10,
+      "createdAt": "2026-10-12T06:21:52.120Z"
+    },
+    {
+      "id": "73a070ee-0edb-45fe-aca8-bb90a4008e32",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "attemptNumber": 17,
+      "code": "def solve():\n    # Read the input if needed, or directly print the expected string\n    # Since the input is \"hello world\" and expected is \"hello world\":\n    print(\"hello world\")\n\nif __name__ == \"__main__\":\n    solve()",
+      "language": "python",
+      "status": "PASSED",
+      "executionTime": 4826,
+      "memoryUsed": 26,
+      "testResultsJson": "[{\"input\":\"hello world\",\"expectedOutput\":\"hello world\",\"actualOutput\":\"hello world\",\"passed\":true,\"isHidden\":false}]",
+      "aiSuggestions": "✨ Excellent execution! Code passed all 1 test cases safely inside the isolated container.",
+      "score": 10,
+      "createdAt": "2026-10-12T07:21:25.392Z"
+    }
+  ],
+  "submissions": [
+    {
+      "id": "ebd084ea-b153-442c-848e-c445c72390ed",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "82b44a03-4a07-404c-bafe-5e951c2583e8",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "finalAttemptId": "37c0b830-3ab7-40e6-8f77-b24df1d66ad0",
+      "totalScore": 10,
+      "rubricScoresJson": null,
+      "plagiarismScore": 20,
+      "status": "SUBMITTED",
+      "submittedAt": "2026-08-29T16:04:50.177Z"
+    },
+    {
+      "id": "278a26f3-1736-4f71-bc51-d4f1b334784e",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "finalAttemptId": "37c0b830-3ab7-40e6-8f77-b24df1d66ad0",
+      "totalScore": 10,
+      "rubricScoresJson": null,
+      "plagiarismScore": 20,
+      "status": "SUBMITTED",
+      "submittedAt": "2026-08-29T16:04:50.185Z"
+    },
+    {
+      "id": "dd3455cd-643b-499d-b169-a79fd7dce775_b0f37aac-68e3-4a68-aaf4-8213b972faa4_a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "sessionId": "dd3455cd-643b-499d-b169-a79fd7dce775",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "a1a05de4-9be5-4ef8-ba0d-25a16173c049",
+      "finalAttemptId": "d39436ec-0b92-43a0-82d4-f03cedd8b5c7",
+      "totalScore": 0,
+      "rubricScoresJson": null,
+      "plagiarismScore": 20,
+      "status": "SUBMITTED",
+      "submittedAt": "2026-08-29T16:14:45.565Z"
+    },
+    {
+      "id": "9efacc59-7448-4f38-b6a0-b5d7667b20f1_b0f37aac-68e3-4a68-aaf4-8213b972faa4_75653f9a-12ea-4130-a2af-960c49786411",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "75653f9a-12ea-4130-a2af-960c49786411",
+      "finalAttemptId": "73a070ee-0edb-45fe-aca8-bb90a4008e32",
+      "totalScore": 10,
+      "rubricScoresJson": null,
+      "plagiarismScore": null,
+      "status": "SUBMITTED",
+      "submittedAt": "2026-10-01T09:08:06.020Z"
+    },
+    {
+      "id": "9efacc59-7448-4f38-b6a0-b5d7667b20f1_b0f37aac-68e3-4a68-aaf4-8213b972faa4_73579a39-1998-455b-bb9b-ce25ccb356c4",
+      "sessionId": "9efacc59-7448-4f38-b6a0-b5d7667b20f1",
+      "studentId": "b0f37aac-68e3-4a68-aaf4-8213b972faa4",
+      "questionId": "73579a39-1998-455b-bb9b-ce25ccb356c4",
+      "finalAttemptId": "9caaf293-6343-435b-8d74-ea93d1167862",
+      "totalScore": 10,
+      "rubricScoresJson": null,
+      "plagiarismScore": null,
+      "status": "SUBMITTED",
+      "submittedAt": "2026-10-01T09:27:42.467Z"
+    }
+  ],
+  "assignments": [
+    {
+      "id": "120bdd62-0485-4ab1-a15d-3005aaa7b543",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "facultyId": "ab5ef8bf-31db-44ee-bc8f-292ddc4095fa",
+      "title": "Case Study: Neural Network Architectures",
+      "description": "Submit written PDF analysis.",
+      "deadline": "2026-08-27T16:04:49.983Z",
+      "maxMarks": 10,
+      "latePenaltyPerDay": 1,
+      "allowedFileTypesJson": "[\"pdf\"]",
+      "createdAt": "2026-08-29T16:04:49.985Z"
+    }
+  ],
+  "assignmentSubmissions": [
+    {
+      "id": "1542e79a-e5bb-489c-932e-f1593b925dce",
+      "assignmentId": "120bdd62-0485-4ab1-a15d-3005aaa7b543",
+      "studentId": "f4bad8ef-881d-459b-b9bc-8d0d202c3f5a",
+      "fileUrl": "/api/uploads/1790750653538_DOCS_Final_Year_Project_Synopsis_Official.docx",
+      "fileName": "DOCS_Final_Year_Project_Synopsis_Official.docx",
+      "fileSize": 999696,
+      "textSolution": null,
+      "submittedAt": "2026-09-30T06:44:14.386Z",
+      "isLate": true,
+      "penaltyApplied": 34,
+      "score": null,
+      "feedback": null,
+      "status": "SUBMITTED"
+    }
+  ],
+  "resources": [],
+  "timetableSlots": [
+    {
+      "id": "104e6f34-4063-4c54-b80f-06d7b33ccb7a",
+      "academicSessionId": "973c77a8-c451-47e1-8b0e-76cc922d2c33",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "studyYearId": "b5854a8e-816a-4a26-99cd-401edcd1e7e1",
+      "divisionId": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "facultyId": "ab5ef8bf-31db-44ee-bc8f-292ddc4095fa",
+      "dayOfWeek": "MONDAY",
+      "startTime": "09:00",
+      "endTime": "11:00",
+      "roomNo": "Lab 302",
+      "createdAt": "2026-08-29T16:04:24.809Z"
+    },
+    {
+      "id": "72fd9116-8b48-45dd-9887-91893ecbe9d8",
+      "academicSessionId": "089ebb46-70ec-4bc2-aa80-006cbe0c3e2d",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "studyYearId": "b5854a8e-816a-4a26-99cd-401edcd1e7e1",
+      "divisionId": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "facultyId": "2e23306d-25f9-4aa2-9d6d-dd5f49e0afef",
+      "dayOfWeek": "MONDAY",
+      "startTime": "09:00",
+      "endTime": "11:00",
+      "roomNo": "Data Science Lab 302",
+      "createdAt": "2026-09-07T09:31:42.839Z"
+    },
+    {
+      "id": "a291a7bc-76c2-4b86-b78e-000b7f04edf8",
+      "academicSessionId": "089ebb46-70ec-4bc2-aa80-006cbe0c3e2d",
+      "departmentId": "3a9d8cb7-0976-40a7-a4dd-0a71636e4df8",
+      "studyYearId": "b5854a8e-816a-4a26-99cd-401edcd1e7e1",
+      "divisionId": "ad0b4af7-258f-417b-a7da-ed882e2d1c83",
+      "batchId": "25d762b2-00d0-4929-920f-d0725a7474fc",
+      "subjectId": "a8f9d71f-e396-4bb3-aa84-6310fd0f1db6",
+      "facultyId": "8e0720a9-5dcc-4c5b-b670-2e89659e5438",
+      "dayOfWeek": "TUESDAY",
+      "startTime": "09:00",
+      "endTime": "11:00",
+      "roomNo": "Data Science Lab 302",
+      "createdAt": "2026-10-07T20:24:59.216Z"
+    }
+  ],
+  "notifications": [],
+  "auditLogs": []
+}

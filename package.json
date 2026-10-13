@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "next lint",
     "db:push": "prisma db push",
-    "db:seed": "node prisma/seed.js"
+    "db:seed": "node prisma/seed.js",
+    "db:export": "node scripts/export-data.js",
+    "db:import": "node scripts/import-data.js",
+    "db:use-postgres": "node scripts/switch-db.js postgresql",
+    "db:use-sqlite": "node scripts/switch-db.js sqlite"
   },
   "dependencies": {
     "@google/genai": "^2.27.0",
