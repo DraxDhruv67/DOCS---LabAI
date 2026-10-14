@@ -38,6 +38,10 @@ yarn-error.log*
 *.pem
 Thumbs.db
 
+# Binaries & Tooling
+cloudflared.exe
+.exec-tmp
+
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts

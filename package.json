@@ -12,7 +12,8 @@
     "db:export": "node scripts/export-data.js",
     "db:import": "node scripts/import-data.js",
     "db:use-postgres": "node scripts/switch-db.js postgresql",
-    "db:use-sqlite": "node scripts/switch-db.js sqlite"
+    "db:use-sqlite": "node scripts/switch-db.js sqlite",
+    "tunnel": ".\\cloudflared.exe tunnel --protocol http2 --url http://localhost:3000"
   },
   "dependencies": {
     "@google/genai": "^2.27.0",
