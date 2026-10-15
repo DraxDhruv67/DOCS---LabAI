@@ -113,6 +113,7 @@ export default function AdminDashboard() {
   const [subjDeptId, setSubjDeptId] = useState('');
   const [subjStudyYearId, setSubjStudyYearId] = useState('');
   const [subjRubricId, setSubjRubricId] = useState('');
+  const [subjError, setSubjError] = useState('');
 
   // Allocation form
   const [allocSubjId, setAllocSubjId] = useState('');
@@ -399,20 +400,43 @@ export default function AdminDashboard() {
 
   const handleCreateSubject = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch('/api/admin/subjects', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        code: subjCode || 'ML201',
-        name: subjName || 'Machine Learning',
-        departmentId: subjDeptId || departments[0]?.id,
-        studyYearId: subjStudyYearId || departments[0]?.studyYears[0]?.id,
-        rubricId: subjRubricId || null,
-      }),
-    });
-    setSubjCode('');
-    setSubjName('');
-    setShowSubjectModal(false);
+    setSubjError('');
+
+    try {
+      const targetDeptId = subjDeptId || departments[0]?.id;
+      const targetDept = departments.find((d) => d.id === targetDeptId);
+      const targetStudyYearId = subjStudyYearId || targetDept?.studyYears?.[0]?.id;
+
+      const res = await fetch('/api/admin/subjects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: subjCode,
+          name: subjName,
+          departmentId: targetDeptId,
+          studyYearId: targetStudyYearId,
+          rubricId: subjRubricId || null,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to create course');
+      }
+
+      setSubjCode('');
+      setSubjName('');
+      setSubjError('');
+      setShowSubjectModal(false);
+      loadAllData();
+    } catch (err: any) {
+      setSubjError(err.message || 'Error creating course');
+    }
+  };
+
+  const handleDeleteSubject = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this course?')) return;
+    await fetch(`/api/admin/subjects?id=${id}`, { method: 'DELETE' });
     loadAllData();
   };
 
@@ -892,29 +916,55 @@ export default function AdminDashboard() {
                 <p className="text-xs text-gray-500">Manage institutional subjects and link evaluation rubrics.</p>
               </div>
               <button
-                onClick={() => setShowSubjectModal(true)}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-900 rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
+                onClick={() => {
+                  setSubjCode('');
+                  setSubjName('');
+                  setSubjError('');
+                  const firstDept = departments[0];
+                  setSubjDeptId(firstDept?.id || '');
+                  setSubjStudyYearId(firstDept?.studyYears?.[0]?.id || '');
+                  setSubjRubricId(rubrics[0]?.id || '');
+                  setShowSubjectModal(true);
+                }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" /> Create Course
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {subjects.map((s) => (
-                <div key={s.id} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-md">
-                  <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-bold rounded-md">
-                      {s.code}
-                    </span>
-                    <span className="text-[11px] text-gray-500">{s.department?.code}</span>
-                  </div>
-                  <h3 className="text-base font-bold text-gray-900">{s.name}</h3>
-                  <div className="pt-2 border-t border-gray-200 flex items-center justify-between text-xs">
-                    <span className="text-gray-500">Linked Rubric:</span>
-                    <span className="font-semibold text-gray-800">{s.rubric?.title || 'Standard Rubric'}</span>
-                  </div>
+              {subjects.length === 0 ? (
+                <div className="col-span-3 p-12 text-center bg-white border border-gray-200 rounded-2xl text-gray-500 text-xs">
+                  No courses created yet. Click "Create Course" to add your first syllabus course.
                 </div>
-              ))}
+              ) : (
+                subjects.map((s) => (
+                  <div key={s.id} className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-md">
+                    <div className="flex items-center justify-between">
+                      <span className="px-2.5 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-mono font-bold rounded-md">
+                        {s.code}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-gray-500 font-medium">
+                          {s.department?.code || 'CSE'} {s.studyYear?.name ? `• ${s.studyYear.name}` : ''}
+                        </span>
+                        <button
+                          onClick={() => handleDeleteSubject(s.id)}
+                          className="p-1 text-gray-400 hover:text-red-600 rounded transition-colors cursor-pointer"
+                          title="Delete Course"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    <h3 className="text-base font-bold text-gray-900">{s.name}</h3>
+                    <div className="pt-2 border-t border-gray-200 flex items-center justify-between text-xs">
+                      <span className="text-gray-500">Linked Rubric:</span>
+                      <span className="font-semibold text-gray-800">{s.rubric?.title || 'Standard Rubric'}</span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -1722,43 +1772,122 @@ export default function AdminDashboard() {
       {showSubjectModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-gray-900 border-b border-gray-200 pb-3">Create Course</h3>
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+              <h3 className="text-base font-bold text-gray-900">Create New Course</h3>
+              <button
+                onClick={() => { setShowSubjectModal(false); setSubjError(''); }}
+                className="text-gray-400 hover:text-gray-600 text-lg cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
             <form onSubmit={handleCreateSubject} className="space-y-4 text-xs">
               <div>
-                <label className="block text-gray-500 mb-1">Course Code</label>
+                <label className="block text-gray-600 font-semibold mb-1">Course Code</label>
                 <input
                   type="text"
                   required
                   value={subjCode}
                   onChange={(e) => setSubjCode(e.target.value)}
-                  placeholder="e.g. ML201"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
+                  placeholder="e.g. ML201 or CS301"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-500 mb-1">Course Name</label>
+                <label className="block text-gray-600 font-semibold mb-1">Course Name</label>
                 <input
                   type="text"
                   required
                   value={subjName}
                   onChange={(e) => setSubjName(e.target.value)}
-                  placeholder="e.g. Machine Learning"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900"
+                  placeholder="e.g. Machine Learning & Pattern Recognition"
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium"
                 />
               </div>
+
+              <div>
+                <label className="block text-gray-600 font-semibold mb-1">Department</label>
+                <select
+                  value={subjDeptId || departments[0]?.id || ''}
+                  onChange={(e) => {
+                    const deptId = e.target.value;
+                    setSubjDeptId(deptId);
+                    const selDept = departments.find((d) => d.id === deptId);
+                    if (selDept && selDept.studyYears?.length > 0) {
+                      setSubjStudyYearId(selDept.studyYears[0].id);
+                    }
+                  }}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium cursor-pointer"
+                >
+                  {departments.length === 0 ? (
+                    <option value="">Default Department (CSE-DS)</option>
+                  ) : (
+                    departments.map((d) => (
+                      <option key={d.id} value={d.id}>
+                        {d.code} — {d.name}
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-gray-600 font-semibold mb-1">Class / Study Year</label>
+                <select
+                  value={subjStudyYearId}
+                  onChange={(e) => setSubjStudyYearId(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium cursor-pointer"
+                >
+                  {(() => {
+                    const currentDept = departments.find((d) => d.id === (subjDeptId || departments[0]?.id));
+                    const syList = currentDept?.studyYears || [];
+                    if (syList.length === 0) {
+                      return <option value="">Default Study Year (SY)</option>;
+                    }
+                    return syList.map((sy: any) => (
+                      <option key={sy.id} value={sy.id}>
+                        {sy.name} ({sy.divisions?.length || 0} Divisions)
+                      </option>
+                    ));
+                  })()}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-gray-600 font-semibold mb-1">Evaluation Rubric (Optional)</label>
+                <select
+                  value={subjRubricId}
+                  onChange={(e) => setSubjRubricId(e.target.value)}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium cursor-pointer"
+                >
+                  <option value="">Default Practical Rubric (10 Marks)</option>
+                  {rubrics.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.title} ({r.maxMarks} Marks)
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {subjError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-800 text-xs font-semibold">
+                  {subjError}
+                </div>
+              )}
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
                 <button
                   type="button"
-                  onClick={() => setShowSubjectModal(false)}
-                  className="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl text-xs font-semibold cursor-pointer"
+                  onClick={() => { setShowSubjectModal(false); setSubjError(''); }}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-md"
                 >
                   Create Course
                 </button>
