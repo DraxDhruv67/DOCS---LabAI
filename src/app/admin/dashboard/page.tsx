@@ -24,6 +24,9 @@ import {
   UserCheck,
   Briefcase,
   Settings2,
+  FileSpreadsheet,
+  Upload,
+  Download,
 } from 'lucide-react';
 
 export default function AdminDashboard() { 
@@ -70,6 +73,11 @@ export default function AdminDashboard() {
   const [showRubricModal, setShowRubricModal] = useState(false);
   const [showTimetableModal, setShowTimetableModal] = useState(false);
   const [showAllocationModal, setShowAllocationModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importType, setImportType] = useState<'students' | 'faculty' | 'allocations'>('students');
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importFeedback, setImportFeedback] = useState<{ success?: boolean; message?: string } | null>(null);
 
   // Form states
   const [newSessionRange, setNewSessionRange] = useState('');
@@ -218,6 +226,43 @@ export default function AdminDashboard() {
     });
     setEditingHierarchy(null);
     loadAllData();
+  };
+
+  const handleBulkImport = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!importFile) return;
+    setImporting(true);
+    setImportFeedback(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', importFile);
+      formData.append('type', importType);
+
+      const res = await fetch('/api/admin/import', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Import failed');
+      }
+
+      setImportFeedback({
+        success: true,
+        message: `Successfully imported ${data.importedCount} records for ${importType}!`,
+      });
+      setImportFile(null);
+      loadAllData();
+    } catch (err: any) {
+      setImportFeedback({
+        success: false,
+        message: err.message || 'Import error occurred',
+      });
+    } finally {
+      setImporting(false);
+    }
   };
 
   const handleCreateSession = async (e: React.FormEvent) => {
@@ -627,12 +672,20 @@ export default function AdminDashboard() {
                 </h2>
                 <p className="text-xs text-gray-500">View, edit, or provision Students, Faculty, and Admin accounts.</p>
               </div>
-              <button
-                onClick={openCreateUserModal}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-900 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4" /> Add New User
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { setImportType('students'); setShowImportModal(true); }}
+                  className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <FileSpreadsheet className="w-4 h-4" /> Bulk Import (Excel/CSV)
+                </button>
+                <button
+                  onClick={openCreateUserModal}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <UserPlus className="w-4 h-4" /> Add New User
+                </button>
+              </div>
             </div>
 
             {/* Filter & Search Bar */}
@@ -876,12 +929,20 @@ export default function AdminDashboard() {
                 </h2>
                 <p className="text-xs text-gray-500">Assign Faculty in Charge to specific Courses and Student Batches.</p>
               </div>
-              <button
-                onClick={() => setShowAllocationModal(true)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
-              >
-                <Plus className="w-4 h-4" /> Allocate Faculty
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => { setImportType('allocations'); setShowImportModal(true); }}
+                  className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <FileSpreadsheet className="w-4 h-4" /> Import Allocations (Excel/CSV)
+                </button>
+                <button
+                  onClick={() => setShowAllocationModal(true)}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" /> Allocate Faculty
+                </button>
+              </div>
             </div>
 
             <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-md">
@@ -1362,6 +1423,40 @@ export default function AdminDashboard() {
                 </select>
               </div>
 
+              <div className="space-y-1.5">
+                <label className="block text-gray-500 text-[11px] font-medium">Quick 2-Hour Practical Slot Presets</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => { setTtStart('09:00'); setTtEnd('11:00'); }}
+                    className="px-2.5 py-1.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 text-gray-700 rounded-lg text-[11px] font-medium border border-gray-200 transition-colors cursor-pointer text-left"
+                  >
+                    Slot 1: 09:00 – 11:00 AM
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setTtStart('11:15'); setTtEnd('13:15'); }}
+                    className="px-2.5 py-1.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 text-gray-700 rounded-lg text-[11px] font-medium border border-gray-200 transition-colors cursor-pointer text-left"
+                  >
+                    Slot 2: 11:15 – 01:15 PM
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setTtStart('14:00'); setTtEnd('16:00'); }}
+                    className="px-2.5 py-1.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 text-gray-700 rounded-lg text-[11px] font-medium border border-gray-200 transition-colors cursor-pointer text-left"
+                  >
+                    Slot 3: 02:00 – 04:00 PM
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setTtStart('16:15'); setTtEnd('18:15'); }}
+                    className="px-2.5 py-1.5 bg-gray-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-200 text-gray-700 rounded-lg text-[11px] font-medium border border-gray-200 transition-colors cursor-pointer text-left"
+                  >
+                    Slot 4: 04:15 – 06:15 PM
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-3 gap-2">
                 <div>
                   <label className="block text-gray-500 mb-1">Day</label>
@@ -1666,6 +1761,107 @@ export default function AdminDashboard() {
                   className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Create Course
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* BULK DATA IMPORT MODAL (.XLSX / .CSV) */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-lg w-full space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                <h3 className="text-base font-bold text-gray-900">Bulk Data Import (.xlsx / .csv)</h3>
+              </div>
+              <button
+                onClick={() => { setShowImportModal(false); setImportFeedback(null); }}
+                className="text-gray-400 hover:text-gray-600 text-lg cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleBulkImport} className="space-y-4 text-xs">
+              <div>
+                <label className="block text-gray-600 font-semibold mb-1">Import Category</label>
+                <select
+                  value={importType}
+                  onChange={(e) => {
+                    setImportType(e.target.value as any);
+                    setImportFeedback(null);
+                  }}
+                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 font-medium"
+                >
+                  <option value="students">Student Accounts (with Dept & Batch Allocation)</option>
+                  <option value="faculty">Faculty Profiles (with Employee ID & Dept)</option>
+                  <option value="allocations">Staff-to-Subject & Batch Mapping</option>
+                </select>
+              </div>
+
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-blue-900">Need the formatted spreadsheet?</div>
+                  <div className="text-[11px] text-blue-700">Download the standard CSV template for {importType}.</div>
+                </div>
+                <a
+                  href={`/api/admin/import?type=${importType}`}
+                  download
+                  className="px-3 py-1.5 bg-white border border-blue-300 text-blue-700 hover:bg-blue-100 rounded-lg font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm"
+                >
+                  <Download className="w-3.5 h-3.5" /> Template
+                </a>
+              </div>
+
+              <div>
+                <label className="block text-gray-600 font-semibold mb-1">Select Excel (.xlsx, .xls) or CSV File</label>
+                <input
+                  type="file"
+                  required
+                  accept=".xlsx, .xls, .csv"
+                  onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                  className="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer"
+                />
+              </div>
+
+              {importFeedback && (
+                <div
+                  className={`p-3 rounded-xl border text-xs ${
+                    importFeedback.success
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-red-50 border-red-200 text-red-800'
+                  }`}
+                >
+                  <div className="font-semibold">{importFeedback.message}</div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => { setShowImportModal(false); setImportFeedback(null); }}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold cursor-pointer"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  disabled={importing || !importFile}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-semibold flex items-center gap-2 cursor-pointer shadow-md"
+                >
+                  {importing ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Importing...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-3.5 h-3.5" /> Upload & Import
+                    </>
+                  )}
                 </button>
               </div>
             </form>

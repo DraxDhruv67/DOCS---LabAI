@@ -24,6 +24,8 @@ import {
   StopCircle,
   Edit,
   Trash2,
+  FileSpreadsheet,
+  Upload,
 } from 'lucide-react';
 
 export default function FacultyDashboard() { 
@@ -61,6 +63,12 @@ export default function FacultyDashboard() {
   const [editingQuestion, setEditingQuestion] = useState<any>(null);
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [showAssignModal, setShowAssignModal] = useState(false);
+  const [showQuestionImportModal, setShowQuestionImportModal] = useState(false);
+  const [targetExpIdForImport, setTargetExpIdForImport] = useState('');
+  const [targetExpTitleForImport, setTargetExpTitleForImport] = useState('');
+  const [questionImportFile, setQuestionImportFile] = useState<File | null>(null);
+  const [questionImporting, setQuestionImporting] = useState(false);
+  const [questionImportFeedback, setQuestionImportFeedback] = useState<{ success?: boolean; message?: string } | null>(null);
 
   // Experiment form
   const [expNo, setExpNo] = useState('1');
@@ -270,6 +278,52 @@ export default function FacultyDashboard() {
     setShowQuestionModal(false);
     const actualSubjId = selectedSubjectId || subjects[0]?.id;
     if (actualSubjId) fetchExperiments(actualSubjId);
+  };
+
+  const openQuestionImportModal = (expId: string, expTitleStr: string) => {
+    setTargetExpIdForImport(expId);
+    setTargetExpTitleForImport(expTitleStr);
+    setQuestionImportFile(null);
+    setQuestionImportFeedback(null);
+    setShowQuestionImportModal(true);
+  };
+
+  const handleBulkImportQuestions = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!questionImportFile || !targetExpIdForImport) return;
+    setQuestionImporting(true);
+    setQuestionImportFeedback(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', questionImportFile);
+      formData.append('experimentId', targetExpIdForImport);
+
+      const res = await fetch('/api/faculty/questions/import', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Question import failed');
+      }
+
+      setQuestionImportFeedback({
+        success: true,
+        message: `Successfully imported ${data.importedCount} questions into Experiment!`,
+      });
+      setQuestionImportFile(null);
+      const actualSubjId = selectedSubjectId || subjects[0]?.id;
+      if (actualSubjId) fetchExperiments(actualSubjId);
+    } catch (err: any) {
+      setQuestionImportFeedback({
+        success: false,
+        message: err.message || 'Import error occurred',
+      });
+    } finally {
+      setQuestionImporting(false);
+    }
   };
 
   const handleScheduleSession = async (e: React.FormEvent) => {
@@ -561,8 +615,15 @@ export default function FacultyDashboard() {
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
                         <button
+                          onClick={() => openQuestionImportModal(exp.id, exp.title)}
+                          className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer ml-1"
+                          title="Import Questions via Excel or CSV"
+                        >
+                          <FileSpreadsheet className="w-3.5 h-3.5" /> Import (.xlsx/.csv)
+                        </button>
+                        <button
                           onClick={() => openCreateQuestion(exp.id)}
-                          className="px-3 py-1.5 bg-gray-100 hover:bg-slate-700 text-emerald-400 border border-gray-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer ml-2"
+                          className="px-3 py-1.5 bg-gray-100 hover:bg-slate-700 text-emerald-400 border border-gray-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer ml-1"
                         >
                           <Plus className="w-3.5 h-3.5" /> Add Question
                         </button>
@@ -814,18 +875,66 @@ export default function FacultyDashboard() {
                 Scanning AST tokens for code similarity...
               </div>
             ) : plagiarismReport ? (
-              <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4">
-                <h3 className="text-base font-bold text-gray-900">Similarity Audit Results</h3>
-                {(plagiarismReport.matches || []).map((m: any, idx: number) => (
-                  <div key={idx} className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between text-xs">
-                    <div>
-                      <span className="font-semibold text-gray-900">{m.studentA}</span> vs <span className="font-semibold text-gray-900">{m.studentB}</span>
-                    </div>
-                    <span className="px-3 py-1 bg-red-50 text-red-700 border border-red-200 font-bold rounded-md">
-                      {m.similarity}% Similarity
-                    </span>
+              <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 shadow-sm">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                  <div>
+                    <h3 className="text-base font-bold text-gray-900">Code Similarity & Plagiarism Audit</h3>
+                    <p className="text-xs text-gray-500">
+                      Scanned {plagiarismReport.scannedSubmissionsCount || 0} student submissions using AST tokenization & Jaccard index.
+                    </p>
                   </div>
-                ))}
+                  <span className="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold rounded-lg">
+                    {((plagiarismReport.pairs || plagiarismReport.matches) || []).length} Pairs Analyzed
+                  </span>
+                </div>
+
+                {((plagiarismReport.pairs || plagiarismReport.matches) || []).length === 0 ? (
+                  <div className="p-8 text-center text-gray-500 text-xs italic bg-gray-50 rounded-xl">
+                    {plagiarismReport.message || 'No suspicious code similarity matches found.'}
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {((plagiarismReport.pairs || plagiarismReport.matches) || []).map((m: any, idx: number) => {
+                      const studentA = m.student1 || m.studentA;
+                      const studentB = m.student2 || m.studentB;
+                      const isHigh = m.similarity >= 70;
+                      return (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                            isHigh ? 'bg-red-50/60 border-red-200' : 'bg-gray-50 border-gray-200'
+                          }`}
+                        >
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              {isHigh && <span className="w-2 h-2 rounded-full bg-red-600 animate-ping"></span>}
+                              <span className="font-bold text-gray-900 text-xs">{studentA}</span>
+                              <span className="text-gray-400 text-xs font-normal">↔</span>
+                              <span className="font-bold text-gray-900 text-xs">{studentB}</span>
+                            </div>
+                            {m.questionTitle && (
+                              <div className="text-[11px] text-gray-500">
+                                Problem Statement: <strong className="text-gray-700">{m.questionTitle}</strong>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`px-3 py-1 rounded-md font-bold text-xs ${
+                                isHigh
+                                  ? 'bg-red-100 text-red-800 border border-red-300'
+                                  : 'bg-amber-100 text-amber-800 border border-amber-300'
+                              }`}
+                            >
+                              {m.similarity}% Similarity
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="p-12 text-center bg-white border border-gray-200 rounded-2xl text-gray-500 text-xs">
@@ -1207,6 +1316,94 @@ export default function FacultyDashboard() {
                   className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-gray-900 rounded-xl text-xs font-semibold cursor-pointer"
                 >
                   Post Assignment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* BULK QUESTION IMPORT MODAL */}
+      {showQuestionImportModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6 max-w-lg w-full space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-3">
+              <div className="flex items-center gap-2">
+                <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                <div>
+                  <h3 className="text-base font-bold text-gray-900">Import Questions from Spreadsheet</h3>
+                  <p className="text-[11px] text-gray-500">Target: {targetExpTitleForImport}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => { setShowQuestionImportModal(false); setQuestionImportFeedback(null); }}
+                className="text-gray-400 hover:text-gray-600 text-lg cursor-pointer"
+              >
+                &times;
+              </button>
+            </div>
+
+            <form onSubmit={handleBulkImportQuestions} className="space-y-4 text-xs">
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-blue-900">Questions CSV Template</div>
+                  <div className="text-[11px] text-blue-700">Pre-formatted with test case columns and example rows.</div>
+                </div>
+                <a
+                  href="/api/faculty/questions/import"
+                  download
+                  className="px-3 py-1.5 bg-white border border-blue-300 text-blue-700 hover:bg-blue-100 rounded-lg font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm"
+                >
+                  <Download className="w-3.5 h-3.5" /> Template
+                </a>
+              </div>
+
+              <div>
+                <label className="block text-gray-600 font-semibold mb-1">Select Excel (.xlsx, .xls) or CSV File</label>
+                <input
+                  type="file"
+                  required
+                  accept=".xlsx, .xls, .csv"
+                  onChange={(e) => setQuestionImportFile(e.target.files?.[0] || null)}
+                  className="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer"
+                />
+              </div>
+
+              {questionImportFeedback && (
+                <div
+                  className={`p-3 rounded-xl border text-xs ${
+                    questionImportFeedback.success
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-red-50 border-red-200 text-red-800'
+                  }`}
+                >
+                  <div className="font-semibold">{questionImportFeedback.message}</div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={() => { setShowQuestionImportModal(false); setQuestionImportFeedback(null); }}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-semibold cursor-pointer"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  disabled={questionImporting || !questionImportFile}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-semibold flex items-center gap-2 cursor-pointer shadow-md"
+                >
+                  {questionImporting ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Importing Questions...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="w-3.5 h-3.5" /> Upload & Import
+                    </>
+                  )}
                 </button>
               </div>
             </form>

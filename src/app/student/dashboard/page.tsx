@@ -29,6 +29,9 @@ import {
   Check,
   Copy,
   ShieldCheck,
+  Maximize2,
+  Minimize2,
+  ShieldAlert,
 } from 'lucide-react';
 
 export default function StudentDashboard() { 
@@ -81,6 +84,57 @@ export default function StudentDashboard() {
   const [execResult, setExecResult] = useState<any>(null);
   const [showResultPopup, setShowResultPopup] = useState(false);
   const [attempts, setAttempts] = useState<any[]>([]);
+
+  // Anti-Cheat & Full Screen Workspace States
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const [tabSwitchCount, setTabSwitchCount] = useState(0);
+  const [showTabSwitchWarning, setShowTabSwitchWarning] = useState(false);
+  const [pasteAttempts, setPasteAttempts] = useState(0);
+  const [showPasteWarning, setShowPasteWarning] = useState(false);
+  const [strictAntiCheat, setStrictAntiCheat] = useState(true);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && selectedExperiment) {
+        setTabSwitchCount((prev) => prev + 1);
+        setShowTabSwitchWarning(true);
+      }
+    };
+
+    const handleFullscreenChange = () => {
+      setIsFullScreen(!!document.fullscreenElement);
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [selectedExperiment]);
+
+  const toggleFullScreen = async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await document.documentElement.requestFullscreen();
+        setIsFullScreen(true);
+      } else {
+        await document.exitFullscreen();
+        setIsFullScreen(false);
+      }
+    } catch (err) {
+      console.warn('Fullscreen toggle:', err);
+    }
+  };
+
+  const handlePasteInEditor = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    if (strictAntiCheat) {
+      e.preventDefault();
+      setPasteAttempts((prev) => prev + 1);
+      setShowPasteWarning(true);
+    }
+  };
 
   // Assignment submission modal state
   const [selectedAssignment, setSelectedAssignment] = useState<any>(null);
@@ -549,6 +603,31 @@ export default function StudentDashboard() {
 
           return (
             <div className="space-y-6">
+              {/* Tab Switch Warning Banner */}
+              {showTabSwitchWarning && (
+                <div className="p-4 bg-amber-50 border-2 border-amber-300 rounded-2xl flex items-center justify-between shadow-sm animate-pulse">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold">
+                      <AlertTriangle className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-amber-900">
+                        Tab Switch Detected! (Violation Count: {tabSwitchCount})
+                      </h4>
+                      <p className="text-[11px] text-amber-700">
+                        Focus loss and window switching are recorded during live practical evaluations. Please stay on this IDE window.
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowTabSwitchWarning(false)}
+                    className="px-3 py-1.5 bg-amber-200 hover:bg-amber-300 text-amber-900 rounded-xl text-xs font-semibold cursor-pointer"
+                  >
+                    Acknowledge
+                  </button>
+                </div>
+              )}
+
               {/* Workspace Navigation Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 border border-gray-200 rounded-2xl gap-3 shadow-sm">
                 <div className="flex items-center gap-3">
@@ -571,7 +650,28 @@ export default function StudentDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={toggleFullScreen}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer border ${
+                      isFullScreen
+                        ? 'bg-amber-500 text-gray-900 border-amber-600 font-bold shadow-sm'
+                        : 'bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200'
+                    }`}
+                    title="Toggle Fullscreen Exam Mode"
+                  >
+                    {isFullScreen ? (
+                      <>
+                        <Minimize2 className="w-3.5 h-3.5" /> Exit Fullscreen
+                      </>
+                    ) : (
+                      <>
+                        <Maximize2 className="w-3.5 h-3.5" /> Full Screen IDE
+                      </>
+                    )}
+                  </button>
+
                   {activeSessionInfo && (
                     <span className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold rounded-lg flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -829,6 +929,9 @@ export default function StudentDashboard() {
                         <span className="font-mono font-semibold text-gray-800">
                           solution.{selectedLanguage === 'python' ? 'py' : selectedLanguage === 'cpp' ? 'cpp' : selectedLanguage === 'java' ? 'java' : 'c'}
                         </span>
+                        <span className="ml-2 inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-semibold rounded-md">
+                          <ShieldCheck className="w-3 h-3 text-emerald-600" /> Anti-Cheat Monitored
+                        </span>
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -860,12 +963,31 @@ export default function StudentDashboard() {
                       </div>
                     </div>
 
+                    {/* Anti-Cheat Paste Warning Alert */}
+                    {showPasteWarning && (
+                      <div className="p-3 bg-rose-50 border-b border-rose-200 text-xs text-rose-800 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+                          <span>
+                            <strong>Anti-Cheat Active:</strong> External clipboard pasting is disabled in Exam Mode to preserve individual work integrity. (Blocked attempts: {pasteAttempts})
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => setShowPasteWarning(false)}
+                          className="text-rose-600 hover:text-rose-800 font-bold ml-2 text-sm cursor-pointer"
+                        >
+                          &times;
+                        </button>
+                      </div>
+                    )}
+
                     {/* Code Textarea with Dark Terminal Theme */}
                     <div className="relative bg-[#18181b] p-1">
                       <textarea
                         rows={14}
                         value={code}
                         disabled={!isCurrentUnlocked}
+                        onPaste={handlePasteInEditor}
                         onChange={(e) => setCode(e.target.value)}
                         placeholder="Write your solution here..."
                         spellCheck={false}
